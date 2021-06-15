@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-06-15T13:29:20.173Z</updated>
+    <updated>2021-06-15T13:59:58.897Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -12,8 +12,8 @@
     <rights>All rights reserved 2021, 小栈</rights>
     <entry>
         <title type="html"><![CDATA[久违的开始]]></title>
-        <id>https://season8.github.io/post/hello-gridea/</id>
-        <link href="https://season8.github.io/post/hello-gridea/">
+        <id>https://season8.github.io/post/hello/</id>
+        <link href="https://season8.github.io/post/hello/">
         </link>
         <updated>2018-12-11T16:00:00.000Z</updated>
         <summary type="html"><![CDATA[<p>👏  欢迎来到我的<strong>小栈</strong> ！<br>
@@ -64,6 +64,8 @@
 </ol>
 <h3 id="关于辞藻">关于辞藻</h3>
 <p>尝试过对刚写的文章进行辞藻加工，实在难以为继，我的幽默用不到文章上，所以，先表达清楚，写得多了，应该会有提高。</p>
+<h3 id="最后">最后</h3>
+<p>少BB，开始吧！</p>
 <p>😘 Enjoy Myself~</p>
 ]]></content>
     </entry>
