@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-06-16T05:29:10.418Z</updated>
+    <updated>2021-06-17T14:49:56.586Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -11,11 +11,93 @@
     <icon>https://season8.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 小栈</rights>
     <entry>
+        <title type="html"><![CDATA[HTTP 进化简史]]></title>
+        <id>https://season8.github.io/post/http/</id>
+        <link href="https://season8.github.io/post/http/">
+        </link>
+        <updated>2018-01-17T13:52:23.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="本文主要概括以下内容">本文主要概括以下内容：</h2>
+<ol>
+<li>什么是HTTP。</li>
+<li>HTTP 和 TCP 关系。</li>
+<li>HTTP 的效率受哪些因素影响。</li>
+<li>HTTP 主要版本极其特性。</li>
+<li>什么是HTTPS，和HTTP的区别是什么。</li>
+</ol>
+<h2 id="什么是http协议">什么是HTTP协议</h2>
+<p>超文本传输协议（HTTP：Hypertext Transport Protocol）是建立在TCP协议上的应用层协议，客户端和服务端通过建立连接，发送请求和响应报文，完成数据请求和响应。</p>
+<p><strong>白话</strong>：HTTP 定义了数据的格式、数据处理方式 以及 连接的使用方式，而连接的建立和释放是由TCP协议控制的。</p>
+<h2 id="http-和-tcp-关系">HTTP 和 TCP 关系</h2>
+<p><strong>TCP</strong> 是传输层协议，建立TCP连接需要三次握手，释放连接需要四次挥手，因此，TCP是可靠的连接，TCP连接是有状态的，只要保持连接不释放，可以传输多组数据。<br>
+<strong>HTTP</strong>是应用层协议，约定了请求行格式和响应格式，约定了关键字，在HTTP1.0中，一个HTTP响应结束后会关闭TCP连接，从而产生了无状态的特性。</p>
+<h2 id="影响http请求的因素">影响HTTP请求的因素</h2>
+<ol>
+<li>带宽</li>
+<li>浏览器阻塞造成的延迟。浏览器对同一个域名同时只能有4个连接（不同内核可能不同），超过的连接被阻塞。</li>
+<li>DNS 解析造成的延迟。浏览器只有知道请求的服务器ip后才会发起请求。</li>
+<li>建立连接造成的延迟。HTTP请求连接需要3次握手。</li>
+<li>关闭连接造成的延迟。HTTP连接关闭需要4次挥手，当浏览器需要创建多个连接时，关闭连接耗时会造成后续请求阻塞时间的延长。</li>
+</ol>
+<h2 id="http主要版本极其特性">HTTP主要版本极其特性</h2>
+<h3 id="http10">HTTP1.0</h3>
+<ol>
+<li>无连接/短连接，一个连接只处理一个请求，每一次请求都要经历创建、关闭连接。</li>
+<li>无状态，对于事务处理没有记忆能力，后续请求如果要用到前序请求的数据、状态，则必须重传这部分数据和状态。</li>
+<li>请求不含主机名（hostname）,HTTP1.0中认为每台服务器都绑定一个唯一的IP地址。</li>
+<li>灵活的数据类型，通过请求头Content-Type字段可以支持多种数据结构。</li>
+<li>简单快速：请求只需要url、method、param/post-data即可完成请求，协议简单易用，响应迅速。</li>
+</ol>
+<ul>
+<li>问：怎么解决无状态下状态持久化问题？</li>
+<li>答：客户端方案：cookie、localStorage，服务端方案：session</li>
+</ul>
+<h3 id="http11">HTTP1.1</h3>
+<ol>
+<li>新增缓存字段 和 错误状态码</li>
+<li>Host头处理,增加hostname,解决一台机器多个虚拟主机的情况。</li>
+<li>支持长连接，一个TCP连接可以多次发送HTTP请求，默认开启Connection： keep-alive</li>
+</ol>
+<h3 id="http20">HTTP2.0</h3>
+<blockquote>
+<p>[科普]TCP慢启动：TCP 连接会随着时间进行自我「调谐」，起初会限制连接的最大速度，如果数据成功传输，会随着时间的推移提高传输的速度</p>
+</blockquote>
+<ol>
+<li>
+<p>多路复用。利用二进制分栈技术，实现单连接多资源，减少服务端的链接压力,内存占用更少,连接吞吐量更大；减少TCP 慢启动时间，提高传输的速度。</p>
+</li>
+<li>
+<p>首部压缩。浏览器和服务端都可以向动态字典中添加键值对，之后这个键值对就可以使用一个字符表示。</p>
+<ol>
+<li>维护一份相同的静态字典（Static Table），包含常见的头部名称，以及特别常见的头部名称与值的组合；</li>
+<li>维护一份相同的动态字典（Dynamic Table），可以动态的添加内容；</li>
+<li>支持基于静态哈夫曼码表的哈夫曼编码（Huffman Coding）；</li>
+</ol>
+</li>
+<li>
+<p>服务器推送，服务器知道浏览器需要加载附加资源时，在响应第一个请求之后，可以主动推送附加资源，充分利用网络空闲资源。</p>
+</li>
+</ol>
+<h3 id="https和http">HTTPS和HTTP</h3>
+<blockquote>
+<p>超文本传输安全协议（HTTPS: Hypertext Transfer Protocol Secure：）是基于HTTP协议的安全通信协议，加密方式是 SSL/TLS。<br>
+HTTPS 开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完整性。</p>
+</blockquote>
+<p>HTTPS 默认工作在 TCP 协议443端口，它的工作流程一般如以下方式：</p>
+<ol>
+<li>TCP 三次同步握手</li>
+<li>客户端验证服务器数字证书</li>
+<li>DH 算法协商对称加密算法的密钥、hash 算法的密钥</li>
+<li>SSL 安全加密隧道协商完成</li>
+<li>网页以加密的方式传输，用协商的对称加密算法和密钥加密，保证数据机密性；用协商的hash算法进行数据完整性保护，保证数据不被篡改。</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[久违的开始]]></title>
         <id>https://season8.github.io/post/hello/</id>
         <link href="https://season8.github.io/post/hello/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
+        <updated>2018-01-12T02:35:39.000Z</updated>
         <summary type="html"><![CDATA[<p>👏  欢迎来到我的<strong>小栈</strong> ！<br>
 ✍️  <strong>小栈</strong>  并不限于技术分享。</p>
 ]]></summary>
