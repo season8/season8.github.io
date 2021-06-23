@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-06-23T08:26:11.206Z</updated>
+    <updated>2021-06-23T08:44:01.869Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -16,7 +16,11 @@
         <link href="https://season8.github.io/post/threadpoolexecutor/">
         </link>
         <updated>2018-04-18T14:41:15.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="一个事故引发的拷问">一个事故引发的拷问</h1>
+        <summary type="html"><![CDATA[<p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
+<!-- more -->
+<h1 id="一个事故引发的拷问">一个事故引发的拷问</h1>
 <p>或许这篇文章可以起名更惊悚一点，叫做：《不合理的线程池配置酿成的血案。。》。<br>
 事情要从一个造成生产事故的案例说起：</p>
 <p>同事开发了一个kafka消费者程序，并发消费消息：</p>
@@ -466,7 +470,11 @@ Exception in thread &quot;main&quot; java.util.concurrent.RejectedExecutionExcep
         <link href="https://season8.github.io/post/http/">
         </link>
         <updated>2018-01-17T13:52:23.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="本文主要概括以下内容">本文主要概括以下内容：</h2>
+        <summary type="html"><![CDATA[<p>八股八股HTTP基础</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>八股八股HTTP基础</p>
+<!-- more -->
+<h2 id="本文主要概括以下内容">本文主要概括以下内容：</h2>
 <ol>
 <li>什么是HTTP。</li>
 <li>HTTP 和 TCP 关系。</li>
