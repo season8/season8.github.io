@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-06-23T08:44:01.869Z</updated>
+    <updated>2021-06-23T10:10:15.078Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://season8.github.io/images/avatar.png</logo>
     <icon>https://season8.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 小栈</rights>
+    <entry>
+        <title type="html"><![CDATA[windows美化工具--TranslucentTB]]></title>
+        <id>https://season8.github.io/post/translucenttb/</id>
+        <link href="https://season8.github.io/post/translucenttb/">
+        </link>
+        <updated>2018-06-23T09:08:08.000Z</updated>
+        <summary type="html"><![CDATA[<p>😎炫酷好用不折腾，颜值党必备神器。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>😎炫酷好用不折腾，颜值党必备神器。</p>
+<!-- more -->
+<p>名称：TranslucentTB<br>
+官网：https://github.com/TranslucentTB/TranslucentTB<br>
+用途：让windows任务栏透明<br>
+获取途径：官网 或 Microsoft Store</p>
+<h2 id="效果">效果：</h2>
+<p>此处只展示常规场景下的效果：<br>
+<img src="https://season8.github.io/post-images/1624440837720.png" alt="" loading="lazy"></p>
+<p>##设置：</p>
+<p><img src="https://season8.github.io/post-images/1624440202821.png" alt="" loading="lazy"><br>
+一级菜单主要提供（自上往下）：<br>
+<strong>常规</strong>、<br>
+<strong>应用全屏</strong>、<br>
+<strong>打开开始菜单</strong>、<br>
+<strong>打开系统搜索</strong>、<br>
+<strong>打开时间轴（win+tab）</strong><br>
+各场景时任务栏颜色变化<br>
+对应二级菜单可设置任务栏为：常规、透明、毛玻璃效果以及自定义颜色。</p>
+<p>基本上常规设置为透明就很炫酷了，其他看自己喜好即可。<br>
+另外，一定要打开设置里的 Open at boot(随系统启动)</p>
+<p>设置一次，基本不用管了。</p>
+<h2 id="多桌面-多屏支持情况">多桌面、多屏支持情况</h2>
+<p>完美支持 多桌面(ALT+WIN+⬅️/➡️)<br>
+支持多显示屏，偶尔会出现扩展屏不生效的情况，解决办法是直接再打开（不需要退出）TranslucentTB，即可生效。</p>
+<h1 id="资源消耗">资源消耗：</h1>
+<p>对cpu和内存都很友好：<br>
+<img src="https://season8.github.io/post-images/1624441031325.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[重新认识 ThreadPoolExecutor]]></title>
         <id>https://season8.github.io/post/threadpoolexecutor/</id>
