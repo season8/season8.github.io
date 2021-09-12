@@ -6,7 +6,7 @@
 
 <title>分布式id生成器 | 小栈</title>
 
-<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631417528606">
+<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631418322616">
 
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://season8.github.io/styles/main.css">
@@ -77,7 +77,7 @@
             
         </div>
         <div style="text-align: center">
-            <form id="gridea-search-form" style="position: relative" data-update="1631417528606" action="/search/index.html">
+            <form id="gridea-search-form" style="position: relative" data-update="1631418322616" action="/search/index.html">
                 <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
                 <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
             </form>
@@ -102,8 +102,9 @@
                     
                 </div>
                 <div class="post-content">
-                    <p>最近老项目升级到cloud，用到了 snowflake，苦于手动配置workerId，撸了个没用的轮子---基于配置中心的雪花ID</p>
+                    <p>这破玩意儿能叫分布式？</p>
 <!-- more -->
+<p>最近老项目升级到cloud，用到了 snowflake，苦于手动配置workerId，撸了个没用的轮子---基于配置中心的雪花ID</p>
 <h2 id="分布式-id-之-snowflake">分布式 ID 之 SNOWFLAKE</h2>
 <p>说起分布式id，首推 SNOWFLAKE（雪花算法），它具有以下优势：</p>
 <ul>
@@ -193,6 +194,7 @@
 <ol>
 <li>不能响应强制中断，从而造成id抢占，如果此时该应用永久下线或者网络配置发生变化，就造成了id泄漏，产生无效的配置数据。</li>
 <li>如果注册中心不可用时，将使用兜底的随机id方式，会有id碰撞风险。</li>
+<li>不能即时修改生效。</li>
 </ol>
 <h3 id="项目地址">项目地址</h3>
 <p><a href="https://github.com/season8/id-generators">id-generators</a></p>
@@ -205,7 +207,7 @@
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
                 <a href="https://season8.github.io/post/translucenttb/" class="post-title gt-a-link">
-                    我爱花里胡哨--TranslucentTB
+                    花里胡哨--TranslucentTB
                 </a>
             </div>
         

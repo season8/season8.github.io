@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-09-12T03:32:12.104Z</updated>
+    <updated>2021-09-12T03:47:49.732Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -109,10 +109,11 @@ layer.open({
         <link href="https://season8.github.io/post/id-generators/">
         </link>
         <updated>2021-07-19T13:05:59.000Z</updated>
-        <summary type="html"><![CDATA[<p>最近老项目升级到cloud，用到了 snowflake，苦于手动配置workerId，撸了个没用的轮子---基于配置中心的雪花ID</p>
+        <summary type="html"><![CDATA[<p>这破玩意儿能叫分布式？</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>最近老项目升级到cloud，用到了 snowflake，苦于手动配置workerId，撸了个没用的轮子---基于配置中心的雪花ID</p>
+        <content type="html"><![CDATA[<p>这破玩意儿能叫分布式？</p>
 <!-- more -->
+<p>最近老项目升级到cloud，用到了 snowflake，苦于手动配置workerId，撸了个没用的轮子---基于配置中心的雪花ID</p>
 <h2 id="分布式-id-之-snowflake">分布式 ID 之 SNOWFLAKE</h2>
 <p>说起分布式id，首推 SNOWFLAKE（雪花算法），它具有以下优势：</p>
 <ul>
@@ -202,17 +203,18 @@ layer.open({
 <ol>
 <li>不能响应强制中断，从而造成id抢占，如果此时该应用永久下线或者网络配置发生变化，就造成了id泄漏，产生无效的配置数据。</li>
 <li>如果注册中心不可用时，将使用兜底的随机id方式，会有id碰撞风险。</li>
+<li>不能即时修改生效。</li>
 </ol>
 <h3 id="项目地址">项目地址</h3>
 <p><a href="https://github.com/season8/id-generators">id-generators</a></p>
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[我爱花里胡哨--TranslucentTB]]></title>
+        <title type="html"><![CDATA[花里胡哨--TranslucentTB]]></title>
         <id>https://season8.github.io/post/translucenttb/</id>
         <link href="https://season8.github.io/post/translucenttb/">
         </link>
-        <updated>2018-06-23T09:08:08.000Z</updated>
+        <updated>2021-06-23T09:08:08.000Z</updated>
         <summary type="html"><![CDATA[<p>😎炫酷好用不折腾，颜值党必备神器。</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>😎炫酷好用不折腾，颜值党必备神器。</p>
@@ -250,7 +252,7 @@ layer.open({
         <id>https://season8.github.io/post/threadpoolexecutor/</id>
         <link href="https://season8.github.io/post/threadpoolexecutor/">
         </link>
-        <updated>2018-04-18T14:41:15.000Z</updated>
+        <updated>2021-03-18T14:41:15.000Z</updated>
         <summary type="html"><![CDATA[<p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
@@ -704,7 +706,7 @@ Exception in thread &quot;main&quot; java.util.concurrent.RejectedExecutionExcep
         <id>https://season8.github.io/post/http/</id>
         <link href="https://season8.github.io/post/http/">
         </link>
-        <updated>2018-01-17T13:52:23.000Z</updated>
+        <updated>2021-03-17T13:52:23.000Z</updated>
         <summary type="html"><![CDATA[<p>八股八股HTTP基础</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>八股八股HTTP基础</p>
@@ -790,7 +792,7 @@ HTTPS 开发的主要目的，是提供对网站服务器的身份认证，保�
         <id>https://season8.github.io/post/hello/</id>
         <link href="https://season8.github.io/post/hello/">
         </link>
-        <updated>2018-01-12T02:35:39.000Z</updated>
+        <updated>2021-03-12T02:35:39.000Z</updated>
         <summary type="html"><![CDATA[<p>👏  欢迎来到我的<strong>小栈</strong> ！<br>
 ✍️  <strong>小栈</strong>  并不限于技术分享。</p>
 ]]></summary>
