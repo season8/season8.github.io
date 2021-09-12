@@ -1,10 +1,10 @@
-<html lang="zh">
+<html>
 <head>
     <meta charset="utf-8"/>
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>关于 - 小栈</title>
+<title>pdf预览的几种方法 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631415873948">
 
@@ -25,7 +25,7 @@
 
 
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
@@ -86,18 +86,120 @@
 </nav>
 
     <div class="post-container">
-        <div class="post-detail">
+        <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
-                <div class="post-content">
+                <h2 class="post-title">
+                    pdf预览的几种方法
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-06 ·
+                    </time>
                     
+                </div>
+                <div class="post-content">
+                    <p>快速实现 pdf / image 预览</p>
+<!-- more -->
+<h2 id="预览-pdf-image">预览 pdf / image</h2>
+<p>后台要求增加一个 预览pdf和图片文件的功能，查了一下实现方法，网上首推 pdf.js，我瞎捣鼓了一下，很是发现了几种实现方式，都挺便捷的。</p>
+<ol>
+<li>访问静态文件url</li>
+<li>通过文件流</li>
+<li>HTML标签+Base64</li>
+<li>pdf.js<img src="https://season8.github.io/post-images/1630939876761.jpg" alt="" loading="lazy"></li>
+</ol>
+<p>下面详细说明一下几种方式的特点，并附上代码，由于我是使用的 layui，故例子都是layui的实现，其他框架也是差不多的，核心思路不变。</p>
+<h2 id="访问静态文件url">访问静态文件url</h2>
+<p>顾名思义，这种方式是针对已有的静态资源，不需要后端将其转换为流。</p>
+<p>使用注意事项：</p>
+<ul>
+<li>依赖浏览器对图片和pdf的支持，通常浏览器会解析为预览或者下载。</li>
+<li>可以被下载监听插件比如IDM监听拦截，如果有相关插件，需要禁用或者添加例外。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-javascript">// layui.layer
+layer.open({
+    title: &quot;预览&quot;,
+    type: 2, // iframe层，content 为url
+    area: ['1000px', '750px'],
+    content: '../static/a.pdf'
+});
+</code></pre>
+<h2 id="通过文件流">通过文件流</h2>
+<p>比较适合动态的文件的访问，原理就是服务端将文件读取并写入到输出流中，前端读取流内容。<br>
+这种方式比较灵活，对文件没什么限制</p>
+<p>使用注意事项：</p>
+<ul>
+<li>依赖浏览器的支持,可能会解析成预览或下载，</li>
+<li>可以被下载监听插件比如IDM监听拦截。</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-javascript">// layui.layer
+layer.open({
+    title: &quot;预览&quot;,
+    type: 2, // iframe层，content 为url
+    area: ['1000px', '750px'],
+    content: '${pageContext.request.contextPath }/preview.pdf',
+});
+</code></pre>
+<p>Java后端返回流示例：</p>
+<pre><code class="language-java">public void detail(HttpServletRequest request, HttpServletResponse response) {
+
+        // 生成或读取文件到字节数组
+        byte[] bytes = xxx;
+
+        // 写入到输出流中
+        try {
+            response.getOutputStream().write(bytes);
+            // 设置文件类型
+            response.setContentType(&quot;application/pdf;charset=UTF-8&quot;);
+        } catch (IOException e) {
+            log.error(&quot;&quot;,e);
+        }
+    }
+</code></pre>
+<h2 id="html标签-base64">HTML标签 + Base64</h2>
+<p>这种情况适用于使用时，已经加载到了客户端的资源。</p>
+<p>特点：</p>
+<ul>
+<li>开发简单</li>
+<li>吃客户端内存</li>
+<li>只加载一次，能有效减少网络io，如果文件比较大，还能节省大量时间</li>
+</ul>
+<p>示例：</p>
+<pre><code class="language-javascript">layer.open({
+    title: &quot;预览&quot;,
+    type: 1, // 页面层， content支持文本和html
+    area: ['1000px', '750px'],
+    // image tag
+    content:  '&lt;img src=&quot;data:image/png;base64,' + data.base64 + '&quot;/&gt;',
+    // pdf tag
+    content: '&lt;embed src=&quot;data:application/pdf;base64,'+ data.base64 +'&quot; type=&quot;application/pdf&quot; width=&quot;100%&quot; height=&quot;100%&quot;&gt;'
+});
+</code></pre>
+<h2 id="pdfjs">*pdf.js</h2>
+<p>网上用这个的人比较多，pdf.js 支持新老版本浏览器，可以基于viewer.html进行修改定制。<br>
+由于需求与效率原因，没有尝试，如果以上三板斧不能满足需求，pdf.js应该是不错的。</p>
+<p>附： (pdf.js 官方连接)[https://github.com/mozilla/pdf.js]</p>
+
                 </div>
             </article>
         </div>
-        <br>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://season8.github.io/post/id-generators/" class="post-title gt-a-link">
+                    分布式id生成器
+                </a>
+            </div>
         
 
         
 
+        
+
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">与君酌</div>

@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>并发 | 小栈</title>
+<title>es 入门 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631415873948">
 
@@ -25,11 +25,11 @@
 
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
-    <div class="main-content">
-        <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
     <div class="navbar-brand">
         <img class="user-avatar" src="/images/avatar.png" alt="头像">
         <div class="site-name gt-c-content-color-first">
@@ -85,62 +85,52 @@
     </div>
 </nav>
 
-        <div class="current-tag-container">
-            <h2 class="title gt-c-content-color-first">
-                #并发
-            </h2>
-        </div>
-        <div class="post-list-container">
-    <div class="post-inner">
-        
-            <div class="post gt-bg-theme-color-second">
-                <div class="post-left">
-                    <div>
-                        
-                        <a href="https://season8.github.io/post/threadpoolexecutor/">
-                            <span class="post-title gt-c-content-color-first">重新认识 ThreadPoolExecutor</span>
-                        </a>
-                    </div>
-                    <div class="gt-post-content post-abstract gt-c-content-color-second">
-                        <p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
-
-                    </div>
-                    <div class="post-info">
-                        <time class="post-time gt-c-content-color-first">
-                            发布于 · 2018-04-18 ·
-                        </time>
-                        
-                            <a href="https://season8.github.io/tag/IRGPmBlJw/" class="post-tag">
-                                # 线程池
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/BO3Z5649S5/" class="post-tag">
-                                # 并发
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/c0O9rlQeYA/" class="post-tag">
-                                # 源码
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/SM2fl9JSda/" class="post-tag">
-                                # 基础
-                            </a>
-                        
-                    </div>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    es 入门
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-08-03 ·
+                    </time>
+                    
                 </div>
-                
-                    <a href="https://season8.github.io/post/threadpoolexecutor/" class="post-feature-image"
-                       style="background-image: url('https://season8.github.io/post-images/threadpoolexecutor.jpg')">
-                    </a>
-                
-            </div>
+                <div class="post-content">
+                    <p>快速上手</p>
+<!-- more -->
+<h3 id="es关键概念">es关键概念</h3>
+<ol>
+<li><strong>index</strong>: 数据集，可类比数据库中的表，mongo中的collection</li>
+<li><strong>es索引</strong>：es索引是基于分词实现</li>
+</ol>
+<h3 id="设置-index-template">设置 index template</h3>
+<p>es 中可指定index模板，用于预定义数据集的配置，包括分区属性、字段类型、索引等。可以配置多个模板，按优先级从高到低依次生效，这个也是推荐的配置方式，比较灵活。</p>
+<h4 id="mapping-中几个重要参数极其区别">mapping 中几个重要参数极其区别</h4>
+<p>enabled参数：<br>
+默认是true。只用于mapping中的object字段类型。当设置为false时，其作用是使es不去解析该字段，并且该字段不能被查询和store，只有在_source中才能看到（即查询结果中会显示的_source数据）。设置enabled为false，可以不设置字段类型，默认为object<br>
+index参数：<br>
+默认是true。当设置为false，表明该字段不能被查询，如果查询会报错。但是可以被store。当该文档被查出来时，在_source中也会显示出该字段。<br>
+store参数：<br>
+默认false。store参数的功能和_source有一些相似。我们的数据默认都会在_source中存在。但我们也可以将数据store起来，不过大部分时候这个功能都很鸡肋。不过有一个例外，当我们使用copy_to参数时，copy_to的目标字段并不会在_source中存储，此时store就派上用场了。<br>
+三者能否同时存在：<br>
+首先设置了enabled为false就不能设置store为true了，这两者冲突。而index和store是不冲突的。最后index和enabled之间的问题：enabled需要字段类型为object，而当字段类型为object时，好像不能设置index参数，试了几次都会报错。</p>
+<h2 id="查询">查询</h2>
+<h3 id="term-和-match区别">term 和 match区别</h3>
+<h3 id="must-filter-区别">must  filter 区别</h3>
+
+                </div>
+            </article>
+        </div>
+
         
-    </div>
-</div>
-        <div class="pagination-container">
-    
-    
-</div>
+
+        
+
+        
+
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">与君酌</div>

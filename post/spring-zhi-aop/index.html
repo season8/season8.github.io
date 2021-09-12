@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>并发 | 小栈</title>
+<title>Spring之AOP | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631415873948">
 
@@ -25,11 +25,11 @@
 
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
-    <div class="main-content">
-        <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
     <div class="navbar-brand">
         <img class="user-avatar" src="/images/avatar.png" alt="头像">
         <div class="site-name gt-c-content-color-first">
@@ -85,62 +85,43 @@
     </div>
 </nav>
 
-        <div class="current-tag-container">
-            <h2 class="title gt-c-content-color-first">
-                #并发
-            </h2>
-        </div>
-        <div class="post-list-container">
-    <div class="post-inner">
-        
-            <div class="post gt-bg-theme-color-second">
-                <div class="post-left">
-                    <div>
-                        
-                        <a href="https://season8.github.io/post/threadpoolexecutor/">
-                            <span class="post-title gt-c-content-color-first">重新认识 ThreadPoolExecutor</span>
-                        </a>
-                    </div>
-                    <div class="gt-post-content post-abstract gt-c-content-color-second">
-                        <p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
-
-                    </div>
-                    <div class="post-info">
-                        <time class="post-time gt-c-content-color-first">
-                            发布于 · 2018-04-18 ·
-                        </time>
-                        
-                            <a href="https://season8.github.io/tag/IRGPmBlJw/" class="post-tag">
-                                # 线程池
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/BO3Z5649S5/" class="post-tag">
-                                # 并发
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/c0O9rlQeYA/" class="post-tag">
-                                # 源码
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/SM2fl9JSda/" class="post-tag">
-                                # 基础
-                            </a>
-                        
-                    </div>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Spring之AOP
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-06-24 ·
+                    </time>
+                    
                 </div>
-                
-                    <a href="https://season8.github.io/post/threadpoolexecutor/" class="post-feature-image"
-                       style="background-image: url('https://season8.github.io/post-images/threadpoolexecutor.jpg')">
-                    </a>
-                
-            </div>
+                <div class="post-content">
+                    <p>💡 AOP原理是什么？Spring的生态里是怎么支持的？怎么使用AOP？</p>
+<!-- more -->
+<h2 id="aop到底是个啥">AOP到底是个啥</h2>
+<p>众所周知：<br>
+AOP是面向切面编程，那么，切面是个啥？</p>
+<p>通俗的讲，切面是一个抽象的概念，假设有一个方法，这个方法会经历从准备执行到执行完毕或抛出异常多过程，我们将这个过程分成多个阶段：准备执行--&gt;执行中--&gt;返回结果/抛出异常--&gt;执行完毕，那么切面就是各个阶段之间的连接点，我们对这些连接点进行扩展定制，就能在不影响原方法逻辑和代码基础上，为其拓展各种个性化的功能。</p>
+<p>所以理论上，切面是近乎无限的，只要你愿意，你能把程序细分成任意个状态，而每个状态之间的连接点，都可以作为一个切面。</p>
+<p>但切面并不是越细越好，常用比较通用的切面是方法执行前后。</p>
+<h2 id="aop原理">AOP原理</h2>
+<p>众所周知：<br>
+AOP实现原理是动态代理，动态代理又是啥？是怎么做到代理的？</p>
+<h2 id="spring生态里是怎么支持aop的">Spring生态里是怎么支持AOP的？</h2>
+
+                </div>
+            </article>
+        </div>
+
         
-    </div>
-</div>
-        <div class="pagination-container">
-    
-    
-</div>
+
+        
+
+        
+
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">与君酌</div>

@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>并发 | 小栈</title>
+<title>Kafka的食用方式 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631415873948">
 
@@ -25,11 +25,11 @@
 
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
-    <div class="main-content">
-        <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
     <div class="navbar-brand">
         <img class="user-avatar" src="/images/avatar.png" alt="头像">
         <div class="site-name gt-c-content-color-first">
@@ -85,62 +85,52 @@
     </div>
 </nav>
 
-        <div class="current-tag-container">
-            <h2 class="title gt-c-content-color-first">
-                #并发
-            </h2>
-        </div>
-        <div class="post-list-container">
-    <div class="post-inner">
-        
-            <div class="post gt-bg-theme-color-second">
-                <div class="post-left">
-                    <div>
-                        
-                        <a href="https://season8.github.io/post/threadpoolexecutor/">
-                            <span class="post-title gt-c-content-color-first">重新认识 ThreadPoolExecutor</span>
-                        </a>
-                    </div>
-                    <div class="gt-post-content post-abstract gt-c-content-color-second">
-                        <p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
-
-                    </div>
-                    <div class="post-info">
-                        <time class="post-time gt-c-content-color-first">
-                            发布于 · 2018-04-18 ·
-                        </time>
-                        
-                            <a href="https://season8.github.io/tag/IRGPmBlJw/" class="post-tag">
-                                # 线程池
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/BO3Z5649S5/" class="post-tag">
-                                # 并发
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/c0O9rlQeYA/" class="post-tag">
-                                # 源码
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/SM2fl9JSda/" class="post-tag">
-                                # 基础
-                            </a>
-                        
-                    </div>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Kafka的食用方式
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-07-04 ·
+                    </time>
+                    
                 </div>
-                
-                    <a href="https://season8.github.io/post/threadpoolexecutor/" class="post-feature-image"
-                       style="background-image: url('https://season8.github.io/post-images/threadpoolexecutor.jpg')">
-                    </a>
-                
-            </div>
+                <div class="post-content">
+                    <p>看起来好像很好吃。</p>
+<!-- more -->
+<h2 id="领导说了三句话程序员帮忙还了18w行的技术债">领导说了三句话，程序员帮忙还了18w行的技术债。</h2>
+<p>我是一苦逼的后端，老板看我比较闲，丢给我一个项目，让我帮忙还一下技术债。我向来是不惧重构优化这种吃力不讨好的掏粪工作的，只要领导点头，给的时间够，我向来都是愿意折腾一把的。有时候一通发挥下来，竟能发现不少有意思的槽点，既能娱乐，又能巩固自己，这活不错的。</p>
+<p>回到正题，这是一个kafka消费的项目，订阅了几十个topic，它们分布在四个kafka集群上，其中每一种topic里有十几种消费类型，合起来定制了几百个消息处理器，工厂是没有的，全靠xml维护map，至于其他的，就不说了，因为我已经发现了华点：这项目的kafka消费看似合理，实际有大坑。</p>
+<h2 id="你永远不知道昨天写的代码有多坑">你永远不知道昨天写的代码有多坑</h2>
+<p>我捋了捋这代码逻辑，还算清晰，主要流程就是：<br>
+每一个集群开一个消费者，批量拉取后，丢到同一个线程池异步消费处理。</p>
+<p>槽点来了：</p>
+<ol>
+<li>所有消费者配置都是自动提交。</li>
+<li>所有消息都是提交到线程池后，就算消费完成。</li>
+<li>所有消息公用一个线程池，使用semaphore 来控制线程池接收任务的阈值。</li>
+</ol>
+<p>这样做的隐患：</p>
+<h2 id="kafka-消费应该注意什么">Kafka 消费应该注意什么?</h2>
+<ol>
+<li>足够的消费能力，消费太慢会导致消息堆积，越往后的消息延迟越高。</li>
+<li>良好的容错能力，消费失败如何保证消息不丢失，提交失败或未提交时，重复消费如何处理。</li>
+<li>正确的时序性，比如</li>
+</ol>
+
+                </div>
+            </article>
+        </div>
+
         
-    </div>
-</div>
-        <div class="pagination-container">
-    
-    
-</div>
+
+        
+
+        
+
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">与君酌</div>

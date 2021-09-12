@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>我爱花里胡哨--TranslucentTB | 小栈</title>
+<title>分布式id生成器 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631415873948">
 
@@ -89,51 +89,113 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    我爱花里胡哨--TranslucentTB
+                    分布式id生成器
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2018-06-23 ·
+                        · 2021-07-19 ·
                     </time>
                     
                         <a href="https://season8.github.io/tag/4cMOW3xrw/" class="post-tags">
                             # 工具
                         </a>
                     
-                        <a href="https://season8.github.io/tag/ZXRKa4sZn/" class="post-tags">
-                            # 测评
-                        </a>
-                    
                 </div>
                 <div class="post-content">
-                    <p>😎炫酷好用不折腾，颜值党必备神器。</p>
+                    <p>最近老项目升级到cloud，用到了 snowflake，苦于手动配置workerId，撸了个没用的轮子---基于配置中心的雪花ID</p>
 <!-- more -->
-<p>名称：TranslucentTB<br>
-官网：https://github.com/TranslucentTB/TranslucentTB<br>
-用途：让windows任务栏透明<br>
-获取途径：官网 或 Microsoft Store</p>
-<h2 id="效果">效果：</h2>
-<p>此处只展示常规场景下的效果：<br>
-<img src="https://season8.github.io/post-images/1624440837720.png" alt="" loading="lazy"></p>
-<p>##设置：</p>
-<p><img src="https://season8.github.io/post-images/1624440202821.png" alt="" loading="lazy"><br>
-一级菜单主要提供（自上往下）：<br>
-<strong>常规</strong>、<br>
-<strong>应用全屏</strong>、<br>
-<strong>打开开始菜单</strong>、<br>
-<strong>打开系统搜索</strong>、<br>
-<strong>打开时间轴（win+tab）</strong><br>
-各场景时任务栏颜色变化<br>
-对应二级菜单可设置任务栏为：常规、透明、毛玻璃效果以及自定义颜色。</p>
-<p>基本上常规设置为透明就很炫酷了，其他看自己喜好即可。<br>
-另外，一定要打开设置里的 Open at boot(随系统启动)</p>
-<p>设置一次，基本不用管了。</p>
-<h2 id="多桌面-多屏支持情况">多桌面、多屏支持情况</h2>
-<p>完美支持 多桌面(ALT+WIN+⬅️/➡️)<br>
-支持多显示屏，偶尔会出现扩展屏不生效的情况，解决办法是直接再打开（不需要退出）TranslucentTB，即可生效。</p>
-<h1 id="资源消耗">资源消耗：</h1>
-<p>对cpu和内存都很友好：<br>
-<img src="https://season8.github.io/post-images/1624441031325.png" alt="" loading="lazy"></p>
+<h2 id="分布式-id-之-snowflake">分布式 ID 之 SNOWFLAKE</h2>
+<p>说起分布式id，首推 SNOWFLAKE（雪花算法），它具有以下优势：</p>
+<ul>
+<li>高效：性能好</li>
+<li>分布式唯一：与DB无关，适应分布式应用</li>
+<li>趋势递增：与时间相关，保持一定的时序性，但又不是绝对递增，可防止id泄漏业务增长信息。</li>
+</ul>
+<p>缺点大概就是：</p>
+<ol>
+<li>与时间相关，时间错乱可能会出现重复id，即时钟回拨问题。</li>
+<li>多应用服务之间，可能会产生id碰撞，这个可以通过设置workerId来解决。</li>
+</ol>
+<p>实际使用中，时钟回拨概率很低，比较麻烦的通常是多服务的workerId配置问题：</p>
+<ol>
+<li>每一个应用的workerId都要不相同从而避免ID碰撞</li>
+<li>多个应用之间workerId差异化配置难以集中管理</li>
+<li>对于多实例的应用，可能除了workerId，其他配置都是相同的，但不得不想办法进行差异化配置、打包、发布。</li>
+</ol>
+<p>何不将每一个实例使用的workerId记录到一个地方？既方便管理，又能避免重复。</p>
+<p>注册中心正好可以解决这个问题。</p>
+<h2 id="快速实现">快速实现</h2>
+<p>这小玩意儿咱设计简陋点，就包含三个主要功能：</p>
+<ul>
+<li>注册id</li>
+<li>注销id</li>
+<li>自动加载</li>
+</ul>
+<h3 id="注册id">注册id</h3>
+<p>这里主要考虑两点：</p>
+<ol>
+<li>如何保证服务之间区分</li>
+<li>如何确保服务注册的id是唯一</li>
+</ol>
+<blockquote>
+<ol>
+<li>如何保证服务之间区分</li>
+</ol>
+</blockquote>
+<p>要能区分服务，即是要有唯一的服务标识，<br>
+我选取的标识是：数据中心+ip+应用标识<br>
+当然我也是可以用随机生成UUID就能保证唯一的服务标识，但使用上面这种有两个好处：</p>
+<ol>
+<li>幂等性：每次启动生成的标识是不变的</li>
+<li>可读性：能从配置中心直接看到每个服务的配置状况。</li>
+</ol>
+<blockquote>
+<ol start="2">
+<li>如何确保服务注册的id是唯一</li>
+</ol>
+</blockquote>
+<p>要保证注册id唯一，只需要在注册前检查所有注册值，如果已注册就换一个就行了。<br>
+即：<img src="https://season8.github.io/post-images/1631030861531.png" alt="" loading="lazy"></p>
+<p>但这还不够，假如两个应用贼有缘，同时启动，随到同一个id，同时检查 id 是否已使用并得到否定结果，然后两人就注册了同一个id！这就是一个典型的多线程一票多卖的问题，看来还是要用锁才行啊。</p>
+<p>经过一番修改，它看起来是这样：<img src="https://season8.github.io/post-images/1631030878516.png" alt="" loading="lazy"></p>
+<p>用分布式锁锁住id，将检查、注册这部分功能变成串行。</p>
+<h3 id="注销id">注销id</h3>
+<p>利用 @PreDestroy 注释一个destroy方法（名字不限哈） ，在服务中断（非 kill -9）时，调用该方法注销配置。</p>
+<p>关于 @PreDestroy 原理 和 Spring Boot 应用中断，这个有空也得自说自话一下。</p>
+<h3 id="自动装载">自动装载</h3>
+<p>配置越少、越简单，才能用的方便不是，不然要被同事吐槽啦（👴：虽然这功能挺鸡肋，但它配置丰富啊🐶）</p>
+<p>总结了一下，得实现以下4个自动化：</p>
+<ol>
+<li>yaml配置得有提示。</li>
+<li>能根据不同类型配置中心配置自动装载配置中心服务。</li>
+<li>无需额外的@ComponentScan、@Import 或java配置，自动装载。</li>
+</ol>
+<blockquote>
+<ol>
+<li>yaml配置得有提示。</li>
+</ol>
+</blockquote>
+<p>使用 spring-boot-configuration-processor 生成 spring-configuration-metadata.json 文件</p>
+<blockquote>
+<ol start="2">
+<li>能根据不同类型配置中心配置自动装载配置中心服务。</li>
+</ol>
+</blockquote>
+<p>使用@ConditionalOnProperty、@ConditionalOnClass 即可做到</p>
+<blockquote>
+<ol start="3">
+<li>无需额外的@ComponentScan、@Import 或java配置，自动装载。</li>
+</ol>
+</blockquote>
+<p>创建  spring.factories 并打包即可</p>
+<p>关于 Spring 自动装载 和 相关注解，emmm.. 下次再说道说道好了。</p>
+<h3 id="缺陷">缺陷</h3>
+<ol>
+<li>不能响应强制中断，从而造成id抢占，如果此时该应用永久下线或者网络配置发生变化，就造成了id泄漏，产生无效的配置数据。</li>
+<li>如果注册中心不可用时，将使用兜底的随机id方式，会有id碰撞风险。</li>
+</ol>
+<h3 id="项目地址">项目地址</h3>
+<p><a href="https://github.com/season8/id-generators">id-generators</a></p>
 
                 </div>
             </article>
@@ -142,8 +204,8 @@
         
             <div class="next-post">
                 <div class="next gt-c-content-color-first">下一篇</div>
-                <a href="https://season8.github.io/post/threadpoolexecutor/" class="post-title gt-a-link">
-                    重新认识 ThreadPoolExecutor
+                <a href="https://season8.github.io/post/translucenttb/" class="post-title gt-a-link">
+                    我爱花里胡哨--TranslucentTB
                 </a>
             </div>
         

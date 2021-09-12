@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>并发 | 小栈</title>
+<title>寻找面积最大岛屿 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631415873948">
 
@@ -25,11 +25,11 @@
 
 
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
 </head>
 <body>
 <div class="main gt-bg-theme-color-first">
-    <div class="main-content">
-        <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg">
     <div class="navbar-brand">
         <img class="user-avatar" src="/images/avatar.png" alt="头像">
         <div class="site-name gt-c-content-color-first">
@@ -85,62 +85,41 @@
     </div>
 </nav>
 
-        <div class="current-tag-container">
-            <h2 class="title gt-c-content-color-first">
-                #并发
-            </h2>
-        </div>
-        <div class="post-list-container">
-    <div class="post-inner">
-        
-            <div class="post gt-bg-theme-color-second">
-                <div class="post-left">
-                    <div>
-                        
-                        <a href="https://season8.github.io/post/threadpoolexecutor/">
-                            <span class="post-title gt-c-content-color-first">重新认识 ThreadPoolExecutor</span>
-                        </a>
-                    </div>
-                    <div class="gt-post-content post-abstract gt-c-content-color-second">
-                        <p>❓ 更深入的理解<strong>ThreadPoolExecutor</strong>原理，纠正想当然的理解误区</p>
-
-                    </div>
-                    <div class="post-info">
-                        <time class="post-time gt-c-content-color-first">
-                            发布于 · 2018-04-18 ·
-                        </time>
-                        
-                            <a href="https://season8.github.io/tag/IRGPmBlJw/" class="post-tag">
-                                # 线程池
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/BO3Z5649S5/" class="post-tag">
-                                # 并发
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/c0O9rlQeYA/" class="post-tag">
-                                # 源码
-                            </a>
-                        
-                            <a href="https://season8.github.io/tag/SM2fl9JSda/" class="post-tag">
-                                # 基础
-                            </a>
-                        
-                    </div>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    寻找面积最大岛屿
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-06-23 ·
+                    </time>
+                    
                 </div>
-                
-                    <a href="https://season8.github.io/post/threadpoolexecutor/" class="post-feature-image"
-                       style="background-image: url('https://season8.github.io/post-images/threadpoolexecutor.jpg')">
-                    </a>
-                
-            </div>
+                <div class="post-content">
+                    <p>小米面试题目</p>
+<!-- more -->
+<p><strong>题目</strong>：一个二维数组，每个位置只能是0或者1，0代表此处是海洋，1代表此处是岛屿，相邻的1（斜着不算相邻）代表岛屿相连，现给定m*n二维数组，求最大岛屿面积。</p>
+<p>这是某次小米3面面试题目，由于平时很少撸算法，导致在有限的时间内只有模糊的思路。</p>
+<p>如果我是做题家，我一定知道这是leetcode中的一道简单难度的题目，但我还不是，于是我尝试在”等通知“之后，按照自己所想思路解了一遍。</p>
+<p><strong>思路</strong>：从左到右，从上往下遍历岛屿坐标，如果找到小岛，就分析小岛相邻坐标，如果相邻也是岛屿，就把该坐标置为0，同时把它的值汇总到上一级小岛上，当然，操作之前还应该先分析它是否有相邻岛屿，如果有，先要处理相邻岛屿。。。</p>
+<p><strong>方案</strong>： 使用一个栈来存储岛屿坐标，当发现小岛时，分析相邻坐标，一旦发现小岛，入栈，相邻岛屿坐标全部入栈后，出栈一个坐标，将小岛标记为0，面积累加，然后分析其相邻坐标，有小岛继续入栈，如此往复，直到栈空，最后累加的面积就是当前坐标相连岛屿面积，并把相连岛屿标记为0，避免后续重复统计。</p>
+<p><strong>实现</strong>：</p>
+<pre><code class="language-java"></code></pre>
+<p><strong>总结</strong>： 后来才知道，这题目有深度优先、广度优先、递归方法来实现，上述解法属于广度优先。</p>
+
+                </div>
+            </article>
+        </div>
+
         
-    </div>
-</div>
-        <div class="pagination-container">
-    
-    
-</div>
+
+        
+
+        
+
+        
 
         <div class="site-footer gt-c-content-color-first">
     <div class="slogan gt-c-content-color-first">与君酌</div>
