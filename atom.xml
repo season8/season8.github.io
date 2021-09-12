@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-09-12T03:15:18.163Z</updated>
+    <updated>2021-09-12T03:17:46.857Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -26,7 +26,7 @@
 <li>访问静态文件url</li>
 <li>通过文件流</li>
 <li>HTML标签+Base64</li>
-<li>pdf.js<img src="https://season8.github.io/post-images/1630939876761.jpg" alt="" loading="lazy"></li>
+<li>pdf.js</li>
 </ol>
 <p>下面详细说明一下几种方式的特点，并附上代码，由于我是使用的 layui，故例子都是layui的实现，其他框架也是差不多的，核心思路不变。</p>
 <h2 id="访问静态文件url">访问静态文件url</h2>
