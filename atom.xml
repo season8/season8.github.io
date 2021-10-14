@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://season8.github.io</id>
     <title>小栈</title>
-    <updated>2021-09-12T03:47:49.732Z</updated>
+    <updated>2021-10-14T13:46:08.518Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://season8.github.io"/>
     <link rel="self" href="https://season8.github.io/atom.xml"/>
@@ -10,6 +10,789 @@
     <logo>https://season8.github.io/images/avatar.png</logo>
     <icon>https://season8.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, 小栈</rights>
+    <entry>
+        <title type="html"><![CDATA[XXL-Job 调研]]></title>
+        <id>https://season8.github.io/post/xxl-job-diao-yan/</id>
+        <link href="https://season8.github.io/post/xxl-job-diao-yan/">
+        </link>
+        <updated>2021-10-08T14:12:16.000Z</updated>
+        <summary type="html"><![CDATA[<p>易用的定时任务调度管理平台</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>易用的定时任务调度管理平台</p>
+<!-- more -->
+<p>项目上的定时任务管理百花齐放，有用 Quartz 的，有用 Spring Schedule Job 的，还有 Crontab 的，任务实现也是跨多语言，有 Java、Groovy、Java-GroovyShell、Shell、Js.<br>
+苦其久矣，正好手上事了，正好整合一波。</p>
+<p>既然是奔着一劳永逸来的，这个工具就需要具备以下特点：</p>
+<ol>
+<li>跨语言，便于脚本移植。</li>
+<li>支持动态部署任务。</li>
+<li>支持集群，分摊单机压力和风险。</li>
+<li>不只是关注与任务本身，需要有有任务从配置到执行整套流程的跟踪处理。</li>
+<li>可视化管理后台。</li>
+</ol>
+<p>目前网上主流的任务调度平台有：<br>
+Quartz、Elastic-Job、XXL-Job...</p>
+<h3 id="quartz">quartz</h3>
+<p>关注于任务任务定时触发，集合了 任务调度、任务执行的功能，支持基于数据库的集群，任务执行通过抢占DB锁的方式执行。</p>
+<h3 id="elastic-job-e-job">elastic-job (E-Job)</h3>
+<p>基于 Quartz 实现，由Elastic-Job-Lite和Elastic-Job-Cloud组成 。</p>
+<ul>
+<li>Elastic-Job-Lite：任务调度框架。通过 ZK 实现分布式集群，具有高可用的特点。</li>
+<li>Elastic-Job-Cloud：供资源治理、应用分发以及进程隔离等功能，通过 ZK 实现分布式集群，使用Mesos 实现资源管理</li>
+</ul>
+<h3 id="xxl-job-x-job-最新版本v240">xxl-job (X-Job) (最新版本v2.4.0)</h3>
+<p>v2.1.0 版本以前基于 Quartz 实现任务调度，之后使用基于 <strong>时间轮</strong> 的自研调度。<br>
+由 xxl-job-admin 和 xxl-job-executor 两部分组成：</p>
+<ul>
+<li>xxl-job-admin：中心化的调度平台，支持基于数据库的集群方案，支持可视化管理</li>
+<li>xxl-job-executor：任务执行器，支持集群，可自动注册到 调度中心。</li>
+</ul>
+<p><strong>对比图</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Quartz</th>
+<th>elastic-job</th>
+<th>xxl-job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文档、社区</td>
+<td></td>
+<td>文档完善，用户量较大，Apache项目</td>
+<td>文档完善，开箱即用，用户量最多</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>mysql</td>
+<td>jdk1.7+,zookeeper3.4.6+，maven3.0.4+，mesos</td>
+<td>mysql，jdk1.7+，maven3.0+</td>
+</tr>
+<tr>
+<td>侧重</td>
+<td>定时任务触发</td>
+<td>侧重数据、资源的有效利用、高可用性</td>
+<td>侧重业务的实现简单化、任务流程管理方便化</td>
+</tr>
+<tr>
+<td>动态添加任务</td>
+<td>不支持</td>
+<td>不支持，但可以扩展实现</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>支持语言</td>
+<td>可扩展定义执行器</td>
+<td>Java、Shell，</td>
+<td>Java、Groovy、Shell、Node、Python、Php，可扩展</td>
+</tr>
+<tr>
+<td>集群、弹性扩容</td>
+<td>多节点，部署，通过竞争数据库锁来保证只有一个节点执行任务</td>
+<td>通过zookeeper的注册与发现，可以动态的添加服务器。支持水平扩容</td>
+<td>集群部署唯一要求为：保证每个集群节点配置（db和登陆账号等）保持一致。调度器通过数据库锁实现集群，执行器通过总动注册到调度器，支持水平扩容</td>
+</tr>
+<tr>
+<td>任务分片</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>管理界面</td>
+<td>无</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>高级功能</td>
+<td>无</td>
+<td>弹性扩容，多种作业模式，失效转移，运行状态收集，多线程处理数据，幂等性，容错处理，spring命名空间支持</td>
+<td>弹性扩容，分片广播，故障转移，Rolling实时日志，GLUE（支持在线编辑代码，免发布），任务进度监控，任务依赖，数据加密，邮件报警，运行报表，国际化</td>
+</tr>
+<tr>
+<td>任务不能重复执行</td>
+<td>数据库锁</td>
+<td>任务分片执行：将任务拆分为n个任务项后，各个服务器分别执行各自分配到的任务项。一旦有新的服务器加入集群，或现有服务器下线，elastic-job将在保留本次任务执行不变的情况下，下次任务开始前触发任重分片。</td>
+<td>（集群）调度中心抢占db锁调度，再通过调度执行器来执行，如果任务配置的是分片广播模式，会触发所有执行器执行。</td>
+</tr>
+<tr>
+<td>并行调度</td>
+<td></td>
+<td>采用任务分片方式实现。将一个任务拆分成n个独立的任务项，由分布式的服务器并行执行各自分配到的分片项。</td>
+<td>调度系统多线程（默认10个线程）触发调度运行，确保调度精确执行，不被堵塞。</td>
+</tr>
+<tr>
+<td>失败处理策略</td>
+<td></td>
+<td>弹性扩容缩容在下次作业运行前重分片，但本次作业执行的过程中，下线的服务器所分配的作业将不会重新被分配。失效转移功能可以在本次作业运行中用空闲服务器抓取孤儿作业分片执行。同样失效转移功能也会牺牲部分性能。</td>
+<td>调度失败时的处理策略，策略包括：失败告警（默认，可扩展）、失败重试（界面可配置）</td>
+</tr>
+<tr>
+<td>动态分片策略</td>
+<td></td>
+<td>支持多种分片策略，可自定义分片策略。 默认包含三种分片策略： 基于平均分配算法的分片策略、 作业名的哈希值奇偶数决定IP升降序算法的分片策略、根据作业名的哈希值对Job实例列表进行轮转的分片策略，支持自定义分片策略。elastic-job的分片是通过zookeeper来实现的。分片的分片由主节点分配，如下三种情况都会触发主节点上的分片算法执行：a、新的Job实例加入集群b、现有的Job实例下线（如果下线的是leader节点，那么先选举然后触发分片算法的执行）c、主节点选举”</td>
+<td>分片广播任务以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。 执行器集群部署时，任务路由策略选择”分片广播”情况下，一次任务调度将会广播触发对应集群中所有执行器执行一次任务，同时传递分片参数；可根据分片参数开发分片任务；</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>1. 只关注定时触发，缺少任务调度、执行以及数据管理的整个流程。<br />2. 调度 以及 执行 一体，如果 任务量增大，拽行器对资源的占用可能会影响到 任务调度部分。<br />3. quartz 通过抢占DB锁 来确定执行节点，可能导致负载悬殊。<br />4. 需要持久化业务QuartzJobBean到底层数据表中，系统侵入性相当严重。<br />5. 不支持集群高可用、监控、告警 6. 无统一管理平台、统计、节点任务追踪</td>
+<td>需要引入zookeeper，mesos，增加系统复杂度，学习成本较高</td>
+<td>调度中心通过获取DB锁来保证集群中执行任务的唯一性，如果短任务很多，随着调度中心集群数量增加，那么数据库的锁竞争会比较厉害，性能不好。</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td></td>
+<td>布式服务系统，大型任务调度需求</td>
+<td>服务、任务一定量级以下的系统</td>
+</tr>
+</tbody>
+</table>
+<h3 id="评估">评估</h3>
+<p>从功能和性能上来说， Quartz 无疑是过时的；<br>
+从运维，E-Job 依赖与 ZooKeeper 和 Mesos，其运维管理是更加复杂的；<br>
+从可用性上来说，E-Job 可用性以及资源利用率是最高的，服务节点越多、任务越多，优势越明显；<br>
+从设计、使用来说，X-Job 最轻量，开发最简单；</p>
+<p>EJob 和 XJob 似乎各有千秋，但基于我们的服务数量、任务数量、开发维护成本, XXL-Job 无疑是 最优解。</p>
+<p>但这还不够，任务调度最关键的要素是：高效、准确地任务调度，如果是集群，还要考虑负载均衡、水平扩展等问题。</p>
+<h2 id="xxl-job-设计原理">XXL-Job 设计原理</h2>
+<figure data-type="image" tabindex="1"><img src="https://www.xuxueli.com/doc/static/xxl-job/images/img_Qohm.png" alt="架构图" loading="lazy"></figure>
+<h3 id="调度中心">调度中心</h3>
+<p>基于时间轮的自研调度组件（早期调度组件基于Quartz）；一方面是为了精简系统降低冗余依赖，另一方面是为了提供系统的可控度与稳定性；</p>
+<p>采用线程池方式调度，避免单线程阻塞导致调度延迟。<br>
+不同任务之间、单个任务在不同执行器内都是通过并行调度的。</p>
+<p><strong>集群</strong>：基于数据库集群方案，随着服务节点和 短时间任务增加，数据库压力会增加。</p>
+<p><strong>并发</strong>：</p>
+<ul>
+<li>全异步化设计：XXL-JOB系统中业务逻辑在远程执行器执行，触发流程全异步化设计。相比直接在调度中心内部执行业务逻辑，极大的降低了调度线程占用时间；
+<ul>
+<li>异步调度：调度中心每次任务触发时仅发送一次调度请求，该调度请求首先推送“异步调度队列”，然后异步推送给远程执行器</li>
+<li>异步执行：执行器会将请求存入“异步执行队列”并且立即响应调度中心，异步运行。</li>
+</ul>
+</li>
+<li>轻量级设计：XXL-JOB调度中心中每个JOB逻辑非常 “轻”，在全异步化的基础上，单个JOB一次运行平均耗时基本在 “10ms” 之内（基本为一次请求的网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行；</li>
+</ul>
+<p>得益于上述两点优化，理论上默认配置下的调度中心，单机能够支撑 5000 任务并发运行稳定运行；</p>
+<p>实际场景中，由于调度中心与执行器网络ping延迟不同、DB读写耗时不同、任务调度密集程度不同，会导致任务量上限会上下波动。</p>
+<p>如若需要支撑更多的任务量，可以通过 “调大调度线程数” 、”降低调度中心与执行器ping延迟” 和 “提升机器配置” 几种方式优化。</p>
+<h3 id="执行器">执行器</h3>
+<p>执行器 和 调度器之间通过 rpc 进行通讯，执行器可自动注册到调度中心，也可以通过调度中心手动录入执行器地址，执行器功能：</p>
+<ul>
+<li>接收调度器下发任务并执行</li>
+<li>写执行日志文件</li>
+<li>执行完毕调用调度器的回调方法</li>
+<li>提供日志跟踪API</li>
+</ul>
+<p>xxl支持静态java 任务、动态 java 任务 以及其他多种脚本任务，也可以通过扩展支持更多的语言。</p>
+<p>静态任务是随执行器发布的，动态任务则配置在调度中心，内容存储在数据库中。</p>
+<h3 id="任务调度流程">任务调度流程</h3>
+<p>1 任务执行器根据配置的调度中心的地址，自动注册到调度中心。<br>
+2 达到任务触发条件，调度中心下发任务。<br>
+3 执行器基于线程池执行任务，并把执行结果放入内存队列中、把执行日志写入日志文件中。<br>
+4 执行器的回调线程消费内存队列中的执行结果，主动上报给调度中心。<br>
+5 当用户在调度中心查看任务日志，调度中心请求任务执行器，任务执行器读取任务日志文件并返回日志详情。</p>
+<h3 id="调度流程答疑">调度流程答疑</h3>
+<ul>
+<li>
+<p>XXL-Job 会引发重复调度吗？<br>
+网上很多重复调度原因是：1. 主从DB未强制走主库 2. SQL 脚本初始化不完全，导致无法生成锁记录。 但抛开这两点，XJob 还是会有重复调度的可能，这个问题 Quartz 也有。<br>
+引发这个问题的原因？</p>
+</li>
+<li>
+<p>如何避免调度器集群中的多个服务器同时调度任务？</p>
+<p>节点通过抢占数据库悲观锁，任务，同一个任务同时只能被一个调度器调度。	<br>
+为了避免重复调度，需要注意：DB主从部署时，务必走主库，防止主从延迟导致锁失效。<br>
+另外，xxl-job优化了 Quartz中 重复触发的问题，降低了重复触发的概率，并提供了针对在度密集或者耗时任务阻塞的集群情况下预防小概率重复调度方案：通过结合 “单机路由策略（如：第一台、一致性哈希）” + “阻塞策略（如：单机串行、丢弃后续调度）” 来规避任务重复执行。</p>
+</li>
+<li>
+<p>如何避免调度器集群中，调度器分配不均？</p>
+<p>调度中心在集群部署时会自动进行任务平均分配，触发组件每次获取与线程池数量（调度中心支持自定义调度线程池大小）相关数量的任务，避免大量任务集中在单个调度中心集群节点。</p>
+</li>
+<li>
+<p>调度器如何保证多任务调度的及时性？</p>
+<p>无论是多任务还是单任务多个执行器，采用线程池 并行调度。</p>
+</li>
+<li>
+<p>调度器线程如何避免等待慢任务造成调度线程阻塞？</p>
+<p>任务调度和执行是异步的，不存在等待执行导致调度阻塞的现象，任务执行完成后会调用回调服务。</p>
+</li>
+<li>
+<p>如何避免调度中心访问、执行器回调调度中心、API服务调用导致 调度中心节点负责失衡？</p>
+<p>可以通过nginx 为 调度中心集群做负载，访问和配置调度中心时使用 nginx域名</p>
+</li>
+<li>
+<p>如何实现任务执行器的路由？</p>
+<p>xxl 提供了丰富的路由策略,包括：第一个、最后一个、轮询、随机、一致性HASH、最不经常使用、最近最久未使用、故障转移、忙碌转移等.</p>
+</li>
+<li>
+<p>执行节点掉线怎么办？</p>
+<p>可以配置任务为 “故障转移” 策略，该策略支持自动进行Failover切换到一台正常的执行器机器并且完成调度请求流程。</p>
+</li>
+<li>
+<p>如果任务执行失败怎么处理？</p>
+<p>可以配置任务失败重试次数，配置失败 告警</p>
+</li>
+<li>
+<p>任务超时怎么处理？</p>
+<p>为了防止任务超时导致执行线程阻塞，可以设置任务超时时间，超时会触发 interrupt (需要注意的是，任务中需要外抛 InterruptedException)</p>
+</li>
+<li>
+<p>调度结果丢失处理</p>
+<p>为了防止调度任务状态永远处于运行中，调度中心会检查 处于“运行中”超过10min的任务，如果对应执行器鑫涛注册失败，则将任务标记为失败。</p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[可编辑下拉框]]></title>
+        <id>https://season8.github.io/post/ke-bian-ji-xia-la-kuang/</id>
+        <link href="https://season8.github.io/post/ke-bian-ji-xia-la-kuang/">
+        </link>
+        <updated>2021-09-28T13:23:39.000Z</updated>
+        <summary type="html"><![CDATA[<p>jquery 大法好</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>jquery 大法好</p>
+<!-- more -->
+<p>应用后台开发的时候，写前端是难免的。<br>
+可编辑下拉框，很多框架有实现，但总会碰到框架支持不好（比如layui）或者没有引入框架的情况。</p>
+<p>网上找打原生实现的例子，鉴于前端写得少，转载记录之：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;自定义下拉选择框&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul,li {
+        list-style: none;
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    input[type=text] {
+        border: 1px solid #ccc;
+    }
+
+    input[type=text]:hover,
+    input[type=text]:focus {
+        border-color: #57bc80;
+        box-shadow: none;
+    }
+
+    body {
+        padding: 50px;
+        font-size: 12px;
+    }
+
+    .my-select-box {
+        position: relative;
+    }
+
+    .my-select-box .my-select-input {
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        padding-right: 20px !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .my-select-box .my-select-list {
+        position: absolute;
+        left: 0;
+        z-index: 101;
+        border: 1px solid #ccc;
+        border-top: none;
+        max-height: 120px;
+        overflow-y: auto;
+        display: none;
+        background: #fff;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .my-select-box .my-select-list li {
+        height: 22px;
+        line-height: 22px;
+        padding: 0 3px;
+        cursor: pointer;
+        margin-bottom: 1px
+    }
+
+    .my-select-box .my-select-list li.choosed {
+        background: #ccc;
+        color: #fff;
+    }
+
+    .my-select-box .my-select-list li:hover {
+        background: #ccc;
+        color: #fff;
+    }
+    &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;my-select-box&quot; style=&quot;width:300px;&quot;&gt;
+        &lt;input type=&quot;text&quot; class=&quot;my-select-input&quot; placeholder=&quot;可输入也可选择&quot; maxlength=&quot;20&quot; /&gt;
+        &lt;ul class=&quot;my-select-list&quot;&gt;
+            &lt;li data-value=&quot;1&quot;&gt;第一项&lt;/li&gt;
+            &lt;li data-value=&quot;2&quot;&gt;第二项&lt;/li&gt;
+            &lt;li data-value=&quot;3&quot;&gt;第三项&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div style=&quot;height: 30px&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;my-select-box&quot;&gt;
+        &lt;input type=&quot;text&quot; class=&quot;my-select-input&quot; placeholder=&quot;可输入也可选择&quot; maxlength=&quot;20&quot; /&gt;
+        &lt;ul class=&quot;my-select-list&quot;&gt;
+            &lt;li data-value=&quot;1&quot;&gt;第一项&lt;/li&gt;
+            &lt;li data-value=&quot;2&quot;&gt;第二项&lt;/li&gt;
+            &lt;li data-value=&quot;3&quot;&gt;第三项&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+    ;
+    (function($) {
+        $.fn.MySelect = function() {
+            this.each(function() {
+                var $box = $(this);
+                var $input = $box.find(&quot;input.my-select-input&quot;); //输入框
+                var $list = $input.next(); //ul装扮成下拉框
+
+                //计算input输入框的高度和宽度，方便定位ul和设置ul及包裹元素的宽度
+                var inputHeight = $input.outerHeight();
+                //var inputWidth=$input.innerWidth();
+                $list.css({ &quot;top&quot;: (inputHeight) });
+                //$box.width($input.outerWidth());
+
+                $input.focus(function() {
+                    //输入框获得焦点后，显示下拉选择ul
+                    var $nextUl = $(this).next();
+                    if ($nextUl.children().length &gt; 0) {
+                        $(this).next().show();
+                    }
+                }).bind('input propertychange', function() {
+                    //绑定监测输入框的输入值更改
+                    var $this = $(this);
+                    $this.attr(&quot;data-id&quot;, &quot;&quot;);
+                    var curText = $this.val();
+                    var $nextUl = $(this).next();
+                    if ($nextUl.children().length &gt; 0) {
+                        $nextUl.find(&quot;li&quot;).removeClass(&quot;choosed&quot;);
+                        $nextUl.find(&quot;li&quot;).each(function(i, item) {
+                            var txt = $(item).text();
+                            if (txt === curText) {
+                                var v = $(item).attr(&quot;data-value&quot;);
+                                $this.attr(&quot;data-id&quot;, v);
+                                $(item).addClass(&quot;choosed&quot;);
+                            }
+                        });
+                    }
+                });
+                //修改成如下事件绑定，为了给动态添加的li也可以产生点击效果
+                $list.off('click', 'li').on('click', 'li', function(e) {
+                    var $this = $(this);
+                    var value = $this.attr(&quot;data-value&quot;) || '';
+                    $input.val($this.text()).attr(&quot;data-id&quot;, value);
+                    $this.addClass(&quot;choosed&quot;).siblings().removeClass(&quot;choosed&quot;);
+                    $this.parent().hide();
+                });
+            });
+
+            //点击.my-select-box范围外时隐藏ul下拉框
+            $(document).click(function(e) {
+                var target = e.target;
+                var $target = $(target);
+                var $parent = $target.closest('.my-select-box');
+
+                if ($parent.length &lt; 1) {
+                    //说明不是.my-select-box范围内点击，将ul隐藏
+                    $(&quot;.my-select-list&quot;).hide();
+
+                } else if ($parent.length == 1) {
+                    //如果存在多个my-select-box的情况，将其余的非这项以外的都隐藏
+                    var $ul = $parent.find(&quot;.my-select-list&quot;);
+                    var flag = $ul.is(&quot;:hidden&quot;);
+                    $(&quot;.my-select-list&quot;).hide();
+                    if (!flag) $ul.show();
+                }
+            });
+            return this;
+        }
+    })(jQuery);
+
+    $(&quot;.my-select-box&quot;).MySelect();
+    &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>转自 <a href="https://www.jianshu.com/p/97252c501e91">原文</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[浅析 String]]></title>
+        <id>https://season8.github.io/post/qian-xi-stringintern/</id>
+        <link href="https://season8.github.io/post/qian-xi-stringintern/">
+        </link>
+        <updated>2021-09-22T14:22:11.000Z</updated>
+        <summary type="html"><![CDATA[<p>妙啊😏</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>妙啊😏</p>
+<!-- more -->
+<h2 id="认识-string从-0-开始">认识 String，从 0 开始</h2>
+<p>无论是 初学 java 还是 java 老司机， 一定碰到过这个问题： String 是 基础类型 还是 对象类型？ 答案毫无悬念， 但问题本身是值得探究的：看似指鹿为马，实事出有因，String 作为一个对象类型，其使用方式 和 性质 还真就有点 基础类型的意思。</p>
+<pre><code class="language-java">public final class String
+    implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence {
+    /** The value is used for character storage. */
+    private final char value[];
+
+    /** Cache the hash code for the string */
+    private int hash; // Default to 0
+</code></pre>
+<p>从String 的源码可以看到：</p>
+<ol>
+<li>String 是基于 char数组实现的</li>
+<li>String 以及 成员变量 value、hash 都是 final 修饰的。</li>
+</ol>
+<p>为什么要使用 final 去修饰呢？先看看 final 关键字的作用：</p>
+<ol>
+<li>修饰的类，无法被继承。</li>
+<li>修饰的方法，无法被重写。</li>
+<li>修饰的变量，必须初始化，且初始化之后，值不能更改。</li>
+<li><strong>隐藏属性</strong>：如果 final 修饰的 是一个 普通对象类型， 那么只能限定其引用不能修改，其非 final 修饰的成员变量 的值 ，是可以修改的，就好比我改了名字，但在改名前后，我任然是代表我自己，指代没有发生变化。</li>
+</ol>
+<p>那么，综合来看,可以得出以下结论:</p>
+<ol>
+<li>Stirng 对象无法被继承。</li>
+<li>成员 value 和 hash 必须被初始化。</li>
+<li>成员 value 的引用不能更改、成员hash 的值不能被修改。</li>
+</ol>
+<p>注意第三条，value 只是引用不能修改，，因为它是 final char[] 对象，在不修改引用的前提下，修改对象内部值是不违反 final 关键字的约束的（见 final 隐藏属性）。</p>
+<p>但是，在 String 中，成员 value 除了 有 final 修饰以外，还有一个 private 修饰符，它表示 value 只能被 String 对象自身 以及 <s>String 的 子类</s>（上面总结第一点：String 无法被继承）访问，而 String 类中 涉及 对 value 写入 的方法，只有 构造器了，所以 String 的成员 value 既不能被修改引用，又不能修改 value 对象内的值。</p>
+<p>再次归纳一下：<br>
+String 对象自创建后，它的对象引用无法被修改、内部成员 的引用 和值 也都无法被修改，它从初始化后，就没有办法被改变了，我们就称这个特性为”<strong>不可变性</strong>“  好了。</p>
+<p>但是，这也太奇怪了，它明明是一个对象不是吗？为什么要给他加上这种 ”不可变性“的约束呢？<br>
+要我说，这样的对象，它除了定义本身是对象、有构造器 和 诸多成员方法外，更像是一个基础数据类型呢！事实上，我们在使用 String 类型变量的 便捷、频率上，它几乎是和基础类型没什么区别，甚至我在刚刚接触编程的时候，都有一种 String 是基础数据类型的错觉！</p>
+<p>要解释这个疑问，不妨逆向思维一下：假如 String 没有 ”不可变性“，现有的程序会出现哪些问题？</p>
+<ol>
+<li>静态 String 变量将失去意义，比如如下常量，可以通过实现 String 的子类来修改其内部属性。</li>
+<li>String 对象，将变得不安全，和第一种情况相似，任何一个线程都有可能会修改 String 对象的内容。</li>
+<li>String 的 hash 将可改变，这会导致 HashMap 失去作用（每次hash 改变都要去 计算hash，改变所属桶），因为 HashMap 的键值设计就是基于 String 的 hashCode。</li>
+<li>我们常使用的 字符串<strong>常量</strong>池， 也将失去作用，当 String 可变时， 就已经不能满足常量这一称呼了。</li>
+</ol>
+<p>所以，String 类型“<strong>不可变性</strong>”的作用是如此的重要， 正是有了这一个特性，我们才能：</p>
+<ul>
+<li>像使用常量一样随意去使用它，不用考虑它的安全问题</li>
+<li>能像常量一样把常用的 String 对象 存储到 常量池中， 节省内存</li>
+<li>利用 hashCode 快速在 HashMap 中 存储、查找元素</li>
+</ul>
+<h2 id="string-创建机制">String 创建机制</h2>
+<p>如果把 String 比作子弹，<strong>不可变性</strong>  就好比附魔，jdk 提供的 String 创建机制 就是一把能打出附魔子弹的手枪。</p>
+<p>下面一段代码使用了常见的几种 方式来 创建 String 对象：</p>
+<pre><code class="language-java">public class StringDemo {
+	public void init() {
+		String s1 = &quot;foo bar&quot;; // 1
+		String s2 = new String(&quot;foo bar&quot;);// 2
+		String s3 = &quot;foo &quot; + &quot;bar&quot;;// 3
+		String s4 = &quot;foo &quot; + new String(&quot;bar&quot;);// 4
+		String s5 = String.valueOf(&quot;foo bar&quot;);// 5
+	}
+}
+</code></pre>
+<p>直接双引号创建、支持 + 操作符，这些便捷的语法，或许和编译器有关，但，他们之间有没有区别呢？大致的原理又是什么？是时候让字节码发言了！</p>
+<pre><code class="language-java">// class version 52.0 (52)
+// access flags 0x21
+public class StringDemo {
+
+  // compiled from: StringDemo.java
+
+  // access flags 0x1
+  public &lt;init&gt;()V
+   L0
+    LINENUMBER 11 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.&lt;init&gt; ()V
+    RETURN
+   L1
+    LOCALVARIABLE this Lcj/StringDemo; L0 L1 0
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x1
+  public init()V
+   L0
+    LINENUMBER 14 L0
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    ASTORE 1 // 栈顶出栈，赋值给 变量表 index=1 的变量，s1
+   L1
+    LINENUMBER 15 L1
+    NEW java/lang/String // 创建 String 对象，入栈
+    DUP // 赋值栈顶对象并入栈
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    INVOKESPECIAL java/lang/String.&lt;init&gt; (Ljava/lang/String;)V // 调用 String 构造器
+    ASTORE 2 // 栈顶出栈，赋值给 变量表 index=2 的变量，s2
+   L2
+    LINENUMBER 16 L2
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    ASTORE 3 // 栈顶出栈，赋值给 变量表 index=3 的变量，s3
+   L3
+    LINENUMBER 17 L3
+    NEW java/lang/StringBuilder // 创建 StringBuilder 对象，入栈
+    DUP
+    INVOKESPECIAL java/lang/StringBuilder.&lt;init&gt; ()V // 调用 StringBuilder 构造器
+    LDC &quot;foo &quot; // 常量池 对象 的引用，入栈
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; // 调用 StringBuilder#append ，返回值入栈
+    NEW java/lang/String // 创建 String 对象，入栈
+    DUP
+    LDC &quot;bar&quot; // 常量池 对象 的引用，入栈
+    INVOKESPECIAL java/lang/String.&lt;init&gt; (Ljava/lang/String;)V // 调用 String 构造器，利用 常量池中“bar”的引用创建新的对象
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; // 调用 StringBuilder#append ，返回值入栈
+    INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+    ASTORE 4 // 栈顶出栈，赋值给 变量表 index=4 的变量，s4
+   L4
+    LINENUMBER 18 L4
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    INVOKESTATIC java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;
+    ASTORE 5 // 栈顶出栈，赋值给 变量表 index=5 的变量，s5
+   L5
+    LINENUMBER 19 L5
+    RETURN
+   L6
+    LOCALVARIABLE this Lcj/StringDemo; L0 L6 0
+    LOCALVARIABLE s1 Ljava/lang/String; L1 L6 1
+    LOCALVARIABLE s2 Ljava/lang/String; L2 L6 2
+    LOCALVARIABLE s3 Ljava/lang/String; L3 L6 3
+    LOCALVARIABLE s4 Ljava/lang/String; L4 L6 4
+    LOCALVARIABLE s5 Ljava/lang/String; L5 L6 5
+    MAXSTACK = 4
+    MAXLOCALS = 6
+}
+</code></pre>
+<p>先解释几个指令：</p>
+<ul>
+<li><strong>NEW</strong>：创建对象，参数为对象类型</li>
+<li><strong>DUP</strong>: 复制栈顶的一个或两个数值并将其重新压入栈顶</li>
+<li><strong>LDC</strong>: 接收一个 8 位的参数，指向常量池中的索引</li>
+<li><strong>ASTORE n</strong>: 从操作数中弹出一个引用数据类型，并把它赋值给局部变量表中索引为 n 的变量</li>
+<li><strong>INVOKESPECIAL</strong>: 调用一些需要特殊处理的方法，包括构造方法、私有方法和父类方法</li>
+<li><strong>INVOKEVIRTUAL</strong>: 调用对象的成员方法，根据对象的实际类型进行分派，支持多态</li>
+<li><strong>INVOKESTATIC</strong>: 调用静态方法</li>
+</ul>
+<p>逐个对象对照分析：</p>
+<ul>
+<li>s1 直接使用双引号创建， 其实际是常量池对象的引用，也就是说，直接双引号创建的字符串都是直接创建在了常量池中。</li>
+<li>s2 通过构造器创建，它是 基于 常量池对象引用 ，创建（new）的 新的对象，即：先在常量池中创建了对象，再基于该对象引用，在堆中创建新的对象，不考虑s1的话，这里一共创建了2个对象！</li>
+<li>s3 看上去和 s1 指令相同，说明编译器将其优化了</li>
+<li>s4 通过 + 拼接 两段 字符串，它的本质居然是 创建了一个空的 StringBuilder，经过两次apend后，调用toString 返回的对象。</li>
+</ul>
+<p>至此 String 三种创建机制的原理和区别，已经清晰明了：</p>
+<ol>
+<li>“”创建： 创建了1个对象， 对象在常量池中</li>
+<li>new String(&quot;&quot;)：创建了 2 个对象， 第一个对象在常量池中，后一个对象value 是 前一个对象value的引用</li>
+<li>“+”拼接：如果拼接的是两段 双引号字符串，那么将直接被编译器优化一个双引号字符串（方式1），否则，将使用 StringBuilder 进行 拼接，其中，每一段构造器创建子串 都将执行 方式2 。</li>
+</ol>
+<h2 id="字符串常量池">字符串常量池</h2>
+<p>上一步的字节码中，有一个指令出现得很频繁：LDC（创建常量池对象，返回其引用）<br>
+这里常量池准确来说是指代 字符串常量池，那么，字符串常量池是什么？</p>
+<p>探究常量池，可以从 String 的 intern 方法中找到蛛丝马迹：</p>
+<pre><code class="language-java">    /**
+     * Returns a canonical representation for the string object.
+     * &lt;p&gt;
+     * A pool of strings, initially empty, is maintained privately by the
+     * class {@code String}.
+     * &lt;p&gt;
+     * When the intern method is invoked, if the pool already contains a
+     * string equal to this {@code String} object as determined by
+     * the {@link #equals(Object)} method, then the string from the pool is
+     * returned. Otherwise, this {@code String} object is added to the
+     * pool and a reference to this {@code String} object is returned.
+     * &lt;p&gt;
+     * It follows that for any two strings {@code s} and {@code t},
+     * {@code s.intern() == t.intern()} is {@code true}
+     * if and only if {@code s.equals(t)} is {@code true}.
+     * &lt;p&gt;
+     * All literal strings and string-valued constant expressions are
+     * interned. String literals are defined in section 3.10.5 of the
+     * &lt;cite&gt;The Java&amp;trade; Language Specification&lt;/cite&gt;.
+     *
+     * @return  a string that has the same contents as this string, but is
+     *          guaranteed to be from a pool of unique strings.
+     */
+    public native String intern();
+</code></pre>
+<p>从注释部分，可以看出关于字符串常量池的描述：一个[String 类私有地维护的] [初始容量为空的] 字符串池。</p>
+<p>intern 方法的作用就是：如果池中 已经有了一个 （与当前对象内容） 相同value 的对象，返回池中对象；否则， 将当前对象添加到池中，并返回 当前对象的引用。</p>
+<p>注释中还提到：所有明面上的字符串和 字符串值常量表达式，都是已经执行了 intern 方法的。所谓 明面上的字符串 就是 上面提到的 双引号创建的字符串，如：String s1 = &quot;abc&quot;，字符串常量表达式则是形如 「String s2 =“a”+ &quot;b&quot;」  这种 表达式，这也应证了前面分析 String 创建机制 的字节码内容。</p>
+<p>intern 是一个 native 方法，它的实现部分是在 jdk 的 C++ 类中，在线查看 openjdk 源码（我选择的是 <a href="http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d">open jdk 8</a>）</p>
+<p><a href="http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/src/share/native/java/lang/String.c">jdk: String.c</a> ：</p>
+<pre><code class="language-C">#include &quot;jvm.h&quot;
+#include &quot;java_lang_String.h&quot;
+
+JNIEXPORT jobject JNICALL
+Java_java_lang_String_intern(JNIEnv *env, jobject this)
+{
+    return JVM_InternString(env, this);
+}
+</code></pre>
+<p>\jdk-687fd7c7986d\src\share\javavm\export\jvm.h：<br>
+<a href="http://hg.openjdk.java.net/jdk8/jdk8/hotspot/file/87ee5ee27509/src/share/vm/prims/jvm.h">hostspot: jvm.h</a>：</p>
+<pre><code class="language-C">...
+/*
+ * java.lang.String
+ */
+JNIEXPORT jstring JNICALL
+JVM_InternString(JNIEnv *env, jstring str);
+</code></pre>
+<p><a href="http://hg.openjdk.java.net/jdk8/jdk8/hotspot/file/87ee5ee27509/src/share/vm/prims/jvm.cpp">hostspot: jvm.cpp</a>：</p>
+<pre><code class="language-C">// String support ///////////////////////////////////////////////////////////////////////////
+
+JVM_ENTRY(jstring, JVM_InternString(JNIEnv *env, jstring str))
+  JVMWrapper(&quot;JVM_InternString&quot;);
+  JvmtiVMObjectAllocEventCollector oam;
+  if (str == NULL) return NULL;
+  oop string = JNIHandles::resolve_non_null(str);
+  oop result = StringTable::intern(string, CHECK_NULL);
+  return (jstring) JNIHandles::make_local(env, result);
+JVM_END
+</code></pre>
+<p>可以看到， java.lang.String#intern 是 通过 JNI（Java Native Interface） 调用 C++ 代码中的 StringTable 的 intern 方法实现的。 StringTable 是类似与 java 中 HashMap的结构，区别是，它的长度是固定的: 1009，另外，我们可以通过设置 jvm 启动参数修改默认大小：</p>
+<pre><code>  -XX:StringTableSize=9999
+</code></pre>
+<p>jdk1.7 以前的版本中，字符串常量池 维护在永久代中，但是在 1.7 版本开始，jdk 移除了永久代，字符串常量池移到了 元数据区，该区又是维护在了堆内存中，这样可以将 永久代 OOM 的风险转到 堆中。字符串常量池的移动对 版本的兼容是有一定影响的，典型的就是：</p>
+<p>创建了几个 String 对象 的问题，我们实际应用中可能不会去触发这个问题，但是这个问题作为一个基础知识，能绕晕一大片老司机😵</p>
+<p>是的，我必然是要分析这个经典八股题的，这篇八股能讲清楚了，那是真正对 『字符串常量池』、『永久代和 元数据区的关系』 了解的透彻了。</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    String s = new String(&quot;1&quot;);
+    s.intern();
+    String s2 = &quot;1&quot;;
+    System.out.println(s == s2); 
+
+    String s3 = new String(&quot;1&quot;) + new String(&quot;1&quot;);
+    s3.intern();
+    String s4 = &quot;11&quot;;
+    System.out.println(s3 == s4);
+}
+</code></pre>
+<p>输出结果：<br>
+jdk1.6: <em>false</em> <em>false</em><br>
+jdk1.7:  <em>false</em> <em>true</em></p>
+<p>为什么是这个结果，可以结合以下内存变量内存分布图来分析：</p>
+<pre><code>     ┌────────┐      ┌───────Heap───────────┐  ┌────PermGen───────────┐
+     │        │      │                      │  │                      │
+     │        │      │     ┌─────────┐      │  │ ┌────String Pool───┐ │
+     │   s ───┼──────┼────►│  String │      │  │ │                  │ │
+     │        │      │     │   Obj   │--------------►┌──────────┐   │ │
+     │        │      │     └─────────┘      │  │ │   │          │   │ │
+     │        │      │                      │  │ │   │   &quot;1&quot;    │   │ │
+     │  s2 ───┼──────┼──────────────────────┼──┼─┼──►│          │   │ │
+     │        │      │                      │  │ │   └──────────┘   │ │
+     │        │      │     ┌─────────┐      │  │ │                  │ │
+     │        │      │     │ String  │      │  │ │   ┌──────────┐   │ │
+     │  s3 ───┼──────┼────►│   Obj   │      │  │ │   │          │   │ │
+     │        │      │     └─────────┘      │  │ │   │   &quot;11&quot;   │   │ │
+     │        │      │                      │  │ │   │          │   │ │
+     │  s4 ───┼──────┼──────────────────────┼──┼─┼──►└──────────┘   │ │
+     │        │      │                      │  │ │                  │ │
+     │        │      │                      │  │ └──────────────────┘ │    ─────►：对象引用
+     │        │      │                      │  │                      │    -----►：对象值引用
+     └────────┘      └──────────────────────┘  └──────────────────────┘
+                             jdk 1.6
+</code></pre>
+<p>先来看 jdk1.6 ，结合前面的 String 实例化方式以及字节码知识逐条分析：</p>
+<ol>
+<li>String s = new String(&quot;1&quot;)<br>
+创建 s 对象的时候， 常量池中以及有常量 &quot;1&quot; 了， 然后基于该常量创建了新的对象 s，此时， s 对象 不等于常量池中常量，但其 「char[] value」是指向 常量池中 常量 的 value （见构造器）。</li>
+<li>s.intern()<br>
+由于常量池中已经有了对象，s.intern() 直接返回常量池中的对象，注意该表达式并没有使用变量来接收返回值，故不产生任何影响。</li>
+<li>String s2 = &quot;1&quot;<br>
+使用书面表达式创建字符串，所以 s2 是直接引用的 常量池对象。</li>
+</ol>
+<p>因此，s 指向堆中对象，s2 指向常量池对象，二者不相同，但它们指向的对象 的 值（value）相同。</p>
+<ol start="4">
+<li>
+<p>String s3 = new String(&quot;1&quot;) + new String(&quot;1&quot;);<br>
+根据 前面字节码分析，可知 s3 创建流程为：</p>
+<ol>
+<li>创建 StringBuilder 对象</li>
+<li>创建常量池对象 “1”</li>
+<li>用常量池对象的值（value）在堆中创建一个新的对象“1”</li>
+<li>StringBuilder 对象 append 新创建的对象</li>
+<li>重复第 3 步，第4 步</li>
+<li>s3 = StringBuilder#toString</li>
+</ol>
+<p>s3 创建完成后，常量池中创建了对象 “1”，但没有创建常量 “11”</p>
+</li>
+<li>
+<p>s3.intern();<br>
+由于常量池中没有 “11”，因此将 s3 放到常量池中，由于 s3 在堆中，常量池在 永久区，因此此时的 『将 s3 放入 常量池』实际是 『用 s3的值在常量池中创建一个对象，二者对象、对象值不存在任何引用关系』。这里 的 intern 放回的是 常量池中创建的新对象，其返回值没有变量接收，不产生任何影响。</p>
+</li>
+<li>
+<p>String s4 = &quot;11&quot;;<br>
+s4 使用书面表达式创建字符串，所以 s4 = 常量池中对象</p>
+<p>因此，s3 指向堆中对象， s4 指向 常量池中对象， 其对象 和 对象值 没有任何关系</p>
+</li>
+</ol>
+<pre><code>     ┌────────┐      ┌────────────────────Heap────────────────────────┐
+     │        │      │                                                │
+     │        │      │     ┌─────────┐           ┌─────tring Pool───┐ │
+     │   s ───┼──────┼────►│  String │           │                  │ │
+     │        │      │     │    Obj  │--------------►┌──────────┐   │ │
+     │        │      │     └─────────┘           │   │ String   │   │ │
+     │        │      │                           │   │    1     │   │ │
+     │  s2 ───┼──────┼───────────────────────────┼──►│          │   │ │
+     │        │      │                           │   └──────────┘   │ │
+     │        │      │     ┌─────────┐           │                  │ │
+     │        │      │     │ String  │           │   ┌──────────┐   │ │
+     │  s3 ───┼──────┼────►│   11    │◄──────────┼───┤  String  │   │ │
+     │        │      │     └─────────┘           │   │    Obj   │   │ │
+     │        │      │                           │   │          │   │ │
+     │  s4 ───┼──────┼───────────────────────────┼──►└──────────┘   │ │
+     │        │      │                           │                  │ │
+     │        │      │                           └──────────────────┘ │    ─────►：对象引用
+     │        │      │                                                │    -----►：对象值引用
+     └────────┘      └────────────────────────────────────────────────┘
+
+                            jdk1.7
+</code></pre>
+<p>再来看 jdk1.7</p>
+<ol>
+<li>String s = new String(&quot;1&quot;)</li>
+<li>s.intern()</li>
+<li>String s2 = &quot;1&quot;</li>
+</ol>
+<p>s 和 s2 创建 过程和结果 与 jdk 1.6 一样，唯一区别是常量池位置。</p>
+<ol start="4">
+<li>String s3 = new String(&quot;1&quot;) + new String(&quot;1&quot;);<br>
+s3 过程和结果 与 jdk 1.6 一样</li>
+<li>s3.intern();<br>
+由于常量池中没有 “11”，因此将 s3 放到常量池中，由于 s3 在堆中，常量池也在堆中，因此，intern 会直接将  s3 “放入”到常量池中，其结果就是 常量池对象 是 s3 对象（堆中对象）的引用</li>
+<li>String s4 = &quot;11&quot;;<br>
+s4 使用书面表达式创建字符串，所以 s4 = 常量池中对象 = s3</li>
+</ol>
+<h2 id="合理适用-字符串常量池intern">合理适用 字符串常量池/intern</h2>
+<p>字符串常量池的作用就一个：节省空间<br>
+通常来讲，空间和时间不可兼得，节省了空间，就会耗费更多时间，intern 操作 是有额外时间开销的。<br>
+如果常量池使用不当， 这个时间开销可能会被放大，甚至有 OOM的风险。</p>
+<p>举个栗子，假如一个应用 持续产生 不重复的字符串， 并每次获取字符串时都尝试使用 intern 将其存入常量池 或从 常量池返回已有对象，由于 字符串不重复，intern 实际 是持续往 StringTable put 数据的，前面我们提到过，StringTable 的结构和 HashMap 类似，我们可以类比 HashMap 来分析：</p>
+<p>首先，HashMap 是有 若干个 桶 组成， 每个桶又由一个链表或红黑树组成，当元素特别多的时候，Hash 碰撞比较频繁， 桶内 链表长度 或 树的深度会非常大，此时若是 查询，时间开销将很大。</p>
+<p>intern 在将数据 放入到 StringTable 前，是需要去查字符串值是否已经在 StringTable 中的，此时刚好就产生了大量的时间开销。</p>
+<p>那么正确的姿势是？<br>
+大量字符串对象且重复率高的应用，可以在字符串获取的时候使用 intern，这样虽然增加了些许时间开销，但能节省大量 新对象的空间开销。 值得注意的是，实际使用中也要根据 字符串对象的量 配置合适的 StringTableSize，太小，Hash碰撞 导致 查询耗时增加， 太大， 浪费内存。</p>
+<p>参考：<br>
+<a href="https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html">美团-深入解析 String#intern</a><br>
+<a href="http://hg.openjdk.java.net/">openjdk 源码</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[pdf预览的几种方法]]></title>
         <id>https://season8.github.io/post/pdf-yl/</id>

@@ -1,0 +1,384 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>XXL-Job 调研 | 小栈</title>
+
+<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://season8.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            小栈
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+                <div class="nav-item">
+                    
+                        <a href="/" class="menu gt-a-link">
+                            首页
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/archives" class="menu gt-a-link">
+                            归档
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/tags" class="menu gt-a-link">
+                            标签
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/post/about" class="menu gt-a-link">
+                            关于
+                        </a>
+                    
+                </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1634219138660" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    XXL-Job 调研
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-10-08 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <p>易用的定时任务调度管理平台</p>
+<!-- more -->
+<p>项目上的定时任务管理百花齐放，有用 Quartz 的，有用 Spring Schedule Job 的，还有 Crontab 的，任务实现也是跨多语言，有 Java、Groovy、Java-GroovyShell、Shell、Js.<br>
+苦其久矣，正好手上事了，正好整合一波。</p>
+<p>既然是奔着一劳永逸来的，这个工具就需要具备以下特点：</p>
+<ol>
+<li>跨语言，便于脚本移植。</li>
+<li>支持动态部署任务。</li>
+<li>支持集群，分摊单机压力和风险。</li>
+<li>不只是关注与任务本身，需要有有任务从配置到执行整套流程的跟踪处理。</li>
+<li>可视化管理后台。</li>
+</ol>
+<p>目前网上主流的任务调度平台有：<br>
+Quartz、Elastic-Job、XXL-Job...</p>
+<h3 id="quartz">quartz</h3>
+<p>关注于任务任务定时触发，集合了 任务调度、任务执行的功能，支持基于数据库的集群，任务执行通过抢占DB锁的方式执行。</p>
+<h3 id="elastic-job-e-job">elastic-job (E-Job)</h3>
+<p>基于 Quartz 实现，由Elastic-Job-Lite和Elastic-Job-Cloud组成 。</p>
+<ul>
+<li>Elastic-Job-Lite：任务调度框架。通过 ZK 实现分布式集群，具有高可用的特点。</li>
+<li>Elastic-Job-Cloud：供资源治理、应用分发以及进程隔离等功能，通过 ZK 实现分布式集群，使用Mesos 实现资源管理</li>
+</ul>
+<h3 id="xxl-job-x-job-最新版本v240">xxl-job (X-Job) (最新版本v2.4.0)</h3>
+<p>v2.1.0 版本以前基于 Quartz 实现任务调度，之后使用基于 <strong>时间轮</strong> 的自研调度。<br>
+由 xxl-job-admin 和 xxl-job-executor 两部分组成：</p>
+<ul>
+<li>xxl-job-admin：中心化的调度平台，支持基于数据库的集群方案，支持可视化管理</li>
+<li>xxl-job-executor：任务执行器，支持集群，可自动注册到 调度中心。</li>
+</ul>
+<p><strong>对比图</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>Quartz</th>
+<th>elastic-job</th>
+<th>xxl-job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文档、社区</td>
+<td></td>
+<td>文档完善，用户量较大，Apache项目</td>
+<td>文档完善，开箱即用，用户量最多</td>
+</tr>
+<tr>
+<td>依赖</td>
+<td>mysql</td>
+<td>jdk1.7+,zookeeper3.4.6+，maven3.0.4+，mesos</td>
+<td>mysql，jdk1.7+，maven3.0+</td>
+</tr>
+<tr>
+<td>侧重</td>
+<td>定时任务触发</td>
+<td>侧重数据、资源的有效利用、高可用性</td>
+<td>侧重业务的实现简单化、任务流程管理方便化</td>
+</tr>
+<tr>
+<td>动态添加任务</td>
+<td>不支持</td>
+<td>不支持，但可以扩展实现</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>支持语言</td>
+<td>可扩展定义执行器</td>
+<td>Java、Shell，</td>
+<td>Java、Groovy、Shell、Node、Python、Php，可扩展</td>
+</tr>
+<tr>
+<td>集群、弹性扩容</td>
+<td>多节点，部署，通过竞争数据库锁来保证只有一个节点执行任务</td>
+<td>通过zookeeper的注册与发现，可以动态的添加服务器。支持水平扩容</td>
+<td>集群部署唯一要求为：保证每个集群节点配置（db和登陆账号等）保持一致。调度器通过数据库锁实现集群，执行器通过总动注册到调度器，支持水平扩容</td>
+</tr>
+<tr>
+<td>任务分片</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>管理界面</td>
+<td>无</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>高级功能</td>
+<td>无</td>
+<td>弹性扩容，多种作业模式，失效转移，运行状态收集，多线程处理数据，幂等性，容错处理，spring命名空间支持</td>
+<td>弹性扩容，分片广播，故障转移，Rolling实时日志，GLUE（支持在线编辑代码，免发布），任务进度监控，任务依赖，数据加密，邮件报警，运行报表，国际化</td>
+</tr>
+<tr>
+<td>任务不能重复执行</td>
+<td>数据库锁</td>
+<td>任务分片执行：将任务拆分为n个任务项后，各个服务器分别执行各自分配到的任务项。一旦有新的服务器加入集群，或现有服务器下线，elastic-job将在保留本次任务执行不变的情况下，下次任务开始前触发任重分片。</td>
+<td>（集群）调度中心抢占db锁调度，再通过调度执行器来执行，如果任务配置的是分片广播模式，会触发所有执行器执行。</td>
+</tr>
+<tr>
+<td>并行调度</td>
+<td></td>
+<td>采用任务分片方式实现。将一个任务拆分成n个独立的任务项，由分布式的服务器并行执行各自分配到的分片项。</td>
+<td>调度系统多线程（默认10个线程）触发调度运行，确保调度精确执行，不被堵塞。</td>
+</tr>
+<tr>
+<td>失败处理策略</td>
+<td></td>
+<td>弹性扩容缩容在下次作业运行前重分片，但本次作业执行的过程中，下线的服务器所分配的作业将不会重新被分配。失效转移功能可以在本次作业运行中用空闲服务器抓取孤儿作业分片执行。同样失效转移功能也会牺牲部分性能。</td>
+<td>调度失败时的处理策略，策略包括：失败告警（默认，可扩展）、失败重试（界面可配置）</td>
+</tr>
+<tr>
+<td>动态分片策略</td>
+<td></td>
+<td>支持多种分片策略，可自定义分片策略。 默认包含三种分片策略： 基于平均分配算法的分片策略、 作业名的哈希值奇偶数决定IP升降序算法的分片策略、根据作业名的哈希值对Job实例列表进行轮转的分片策略，支持自定义分片策略。elastic-job的分片是通过zookeeper来实现的。分片的分片由主节点分配，如下三种情况都会触发主节点上的分片算法执行：a、新的Job实例加入集群b、现有的Job实例下线（如果下线的是leader节点，那么先选举然后触发分片算法的执行）c、主节点选举”</td>
+<td>分片广播任务以执行器为维度进行分片，支持动态扩容执行器集群从而动态增加分片数量，协同进行业务处理；在进行大数据量业务操作时可显著提升任务处理能力和速度。 执行器集群部署时，任务路由策略选择”分片广播”情况下，一次任务调度将会广播触发对应集群中所有执行器执行一次任务，同时传递分片参数；可根据分片参数开发分片任务；</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>1. 只关注定时触发，缺少任务调度、执行以及数据管理的整个流程。<br />2. 调度 以及 执行 一体，如果 任务量增大，拽行器对资源的占用可能会影响到 任务调度部分。<br />3. quartz 通过抢占DB锁 来确定执行节点，可能导致负载悬殊。<br />4. 需要持久化业务QuartzJobBean到底层数据表中，系统侵入性相当严重。<br />5. 不支持集群高可用、监控、告警 6. 无统一管理平台、统计、节点任务追踪</td>
+<td>需要引入zookeeper，mesos，增加系统复杂度，学习成本较高</td>
+<td>调度中心通过获取DB锁来保证集群中执行任务的唯一性，如果短任务很多，随着调度中心集群数量增加，那么数据库的锁竞争会比较厉害，性能不好。</td>
+</tr>
+<tr>
+<td>使用场景</td>
+<td></td>
+<td>布式服务系统，大型任务调度需求</td>
+<td>服务、任务一定量级以下的系统</td>
+</tr>
+</tbody>
+</table>
+<h3 id="评估">评估</h3>
+<p>从功能和性能上来说， Quartz 无疑是过时的；<br>
+从运维，E-Job 依赖与 ZooKeeper 和 Mesos，其运维管理是更加复杂的；<br>
+从可用性上来说，E-Job 可用性以及资源利用率是最高的，服务节点越多、任务越多，优势越明显；<br>
+从设计、使用来说，X-Job 最轻量，开发最简单；</p>
+<p>EJob 和 XJob 似乎各有千秋，但基于我们的服务数量、任务数量、开发维护成本, XXL-Job 无疑是 最优解。</p>
+<p>但这还不够，任务调度最关键的要素是：高效、准确地任务调度，如果是集群，还要考虑负载均衡、水平扩展等问题。</p>
+<h2 id="xxl-job-设计原理">XXL-Job 设计原理</h2>
+<figure data-type="image" tabindex="1"><img src="https://www.xuxueli.com/doc/static/xxl-job/images/img_Qohm.png" alt="架构图" loading="lazy"></figure>
+<h3 id="调度中心">调度中心</h3>
+<p>基于时间轮的自研调度组件（早期调度组件基于Quartz）；一方面是为了精简系统降低冗余依赖，另一方面是为了提供系统的可控度与稳定性；</p>
+<p>采用线程池方式调度，避免单线程阻塞导致调度延迟。<br>
+不同任务之间、单个任务在不同执行器内都是通过并行调度的。</p>
+<p><strong>集群</strong>：基于数据库集群方案，随着服务节点和 短时间任务增加，数据库压力会增加。</p>
+<p><strong>并发</strong>：</p>
+<ul>
+<li>全异步化设计：XXL-JOB系统中业务逻辑在远程执行器执行，触发流程全异步化设计。相比直接在调度中心内部执行业务逻辑，极大的降低了调度线程占用时间；
+<ul>
+<li>异步调度：调度中心每次任务触发时仅发送一次调度请求，该调度请求首先推送“异步调度队列”，然后异步推送给远程执行器</li>
+<li>异步执行：执行器会将请求存入“异步执行队列”并且立即响应调度中心，异步运行。</li>
+</ul>
+</li>
+<li>轻量级设计：XXL-JOB调度中心中每个JOB逻辑非常 “轻”，在全异步化的基础上，单个JOB一次运行平均耗时基本在 “10ms” 之内（基本为一次请求的网络开销）；因此，可以保证使用有限的线程支撑大量的JOB并发运行；</li>
+</ul>
+<p>得益于上述两点优化，理论上默认配置下的调度中心，单机能够支撑 5000 任务并发运行稳定运行；</p>
+<p>实际场景中，由于调度中心与执行器网络ping延迟不同、DB读写耗时不同、任务调度密集程度不同，会导致任务量上限会上下波动。</p>
+<p>如若需要支撑更多的任务量，可以通过 “调大调度线程数” 、”降低调度中心与执行器ping延迟” 和 “提升机器配置” 几种方式优化。</p>
+<h3 id="执行器">执行器</h3>
+<p>执行器 和 调度器之间通过 rpc 进行通讯，执行器可自动注册到调度中心，也可以通过调度中心手动录入执行器地址，执行器功能：</p>
+<ul>
+<li>接收调度器下发任务并执行</li>
+<li>写执行日志文件</li>
+<li>执行完毕调用调度器的回调方法</li>
+<li>提供日志跟踪API</li>
+</ul>
+<p>xxl支持静态java 任务、动态 java 任务 以及其他多种脚本任务，也可以通过扩展支持更多的语言。</p>
+<p>静态任务是随执行器发布的，动态任务则配置在调度中心，内容存储在数据库中。</p>
+<h3 id="任务调度流程">任务调度流程</h3>
+<p>1 任务执行器根据配置的调度中心的地址，自动注册到调度中心。<br>
+2 达到任务触发条件，调度中心下发任务。<br>
+3 执行器基于线程池执行任务，并把执行结果放入内存队列中、把执行日志写入日志文件中。<br>
+4 执行器的回调线程消费内存队列中的执行结果，主动上报给调度中心。<br>
+5 当用户在调度中心查看任务日志，调度中心请求任务执行器，任务执行器读取任务日志文件并返回日志详情。</p>
+<h3 id="调度流程答疑">调度流程答疑</h3>
+<ul>
+<li>
+<p>XXL-Job 会引发重复调度吗？<br>
+网上很多重复调度原因是：1. 主从DB未强制走主库 2. SQL 脚本初始化不完全，导致无法生成锁记录。 但抛开这两点，XJob 还是会有重复调度的可能，这个问题 Quartz 也有。<br>
+引发这个问题的原因？</p>
+</li>
+<li>
+<p>如何避免调度器集群中的多个服务器同时调度任务？</p>
+<p>节点通过抢占数据库悲观锁，任务，同一个任务同时只能被一个调度器调度。	<br>
+为了避免重复调度，需要注意：DB主从部署时，务必走主库，防止主从延迟导致锁失效。<br>
+另外，xxl-job优化了 Quartz中 重复触发的问题，降低了重复触发的概率，并提供了针对在度密集或者耗时任务阻塞的集群情况下预防小概率重复调度方案：通过结合 “单机路由策略（如：第一台、一致性哈希）” + “阻塞策略（如：单机串行、丢弃后续调度）” 来规避任务重复执行。</p>
+</li>
+<li>
+<p>如何避免调度器集群中，调度器分配不均？</p>
+<p>调度中心在集群部署时会自动进行任务平均分配，触发组件每次获取与线程池数量（调度中心支持自定义调度线程池大小）相关数量的任务，避免大量任务集中在单个调度中心集群节点。</p>
+</li>
+<li>
+<p>调度器如何保证多任务调度的及时性？</p>
+<p>无论是多任务还是单任务多个执行器，采用线程池 并行调度。</p>
+</li>
+<li>
+<p>调度器线程如何避免等待慢任务造成调度线程阻塞？</p>
+<p>任务调度和执行是异步的，不存在等待执行导致调度阻塞的现象，任务执行完成后会调用回调服务。</p>
+</li>
+<li>
+<p>如何避免调度中心访问、执行器回调调度中心、API服务调用导致 调度中心节点负责失衡？</p>
+<p>可以通过nginx 为 调度中心集群做负载，访问和配置调度中心时使用 nginx域名</p>
+</li>
+<li>
+<p>如何实现任务执行器的路由？</p>
+<p>xxl 提供了丰富的路由策略,包括：第一个、最后一个、轮询、随机、一致性HASH、最不经常使用、最近最久未使用、故障转移、忙碌转移等.</p>
+</li>
+<li>
+<p>执行节点掉线怎么办？</p>
+<p>可以配置任务为 “故障转移” 策略，该策略支持自动进行Failover切换到一台正常的执行器机器并且完成调度请求流程。</p>
+</li>
+<li>
+<p>如果任务执行失败怎么处理？</p>
+<p>可以配置任务失败重试次数，配置失败 告警</p>
+</li>
+<li>
+<p>任务超时怎么处理？</p>
+<p>为了防止任务超时导致执行线程阻塞，可以设置任务超时时间，超时会触发 interrupt (需要注意的是，任务中需要外抛 InterruptedException)</p>
+</li>
+<li>
+<p>调度结果丢失处理</p>
+<p>为了防止调度任务状态永远处于运行中，调度中心会检查 处于“运行中”超过10min的任务，如果对应执行器鑫涛注册失败，则将任务标记为失败。</p>
+</li>
+</ul>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://season8.github.io/post/ke-bian-ji-xia-la-kuang/" class="post-title gt-a-link">
+                    可编辑下拉框
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">与君酌</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/season8" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://season8.github.io
+" target="_blank">season8</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://season8.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -6,7 +6,7 @@
 
 <title>计算器实现--逆波兰表达式 | 小栈</title>
 
-<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1631418322616">
+<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
 
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://season8.github.io/styles/main.css">
@@ -77,7 +77,7 @@
             
         </div>
         <div style="text-align: center">
-            <form id="gridea-search-form" style="position: relative" data-update="1631418322616" action="/search/index.html">
+            <form id="gridea-search-form" style="position: relative" data-update="1634219138660" action="/search/index.html">
                 <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
                 <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
             </form>
@@ -98,8 +98,23 @@
                     
                 </div>
                 <div class="post-content">
-                    <p>实现计算器功能，核心思想是将算术表达式转成逆波兰表达式（后缀表达式）。</p>
+                    <p>后缀表达式，机器思维</p>
 <!-- more -->
+<h2 id="题目">题目：</h2>
+<p>给定一个算术表达式，计算表达式的值。<br>
+输入：支持四则运算符、括号，支持整数、小数、正负数，表达式可包含空格<br>
+输出：double值</p>
+<h2 id="思路">思路：</h2>
+<p>我们计算的时候，通常大脑会将表达式按照运算优先级解析提取成多个单元，每个单元包含一个操作符和若干个操作数，如 1 + 2 * 3 -5，我们知道先计算 2*3，再和1相加，再和5相减。那么对于输入的算数表达式，只要能解析出哪些运算单元优先执行，即可求出结果。但这种表达式计算机并不能很好的解析，因此我们要用到前/中/后缀表达式的概念。</p>
+<p>中缀表达式：操作符在运算数字中间。<br>
+后缀表达式：操作符在运算数字前或后。如上述中缀表达式对应后缀表达式：123*+5-。<br>
+前缀表达式：同后缀，只是操作符放前面。由波兰逻辑学家卢卡西维奇提出，因此又称波兰式</p>
+<p>Q: 为什么中缀表达式计算机难以解析？<br>
+A: 例如1 + 2 * 3 - 5,计算机读到 1+2，此时不能计算，因为2<em>3优先级更高，假设硬解析，那么此处要将1+先保留，判断后面是否有更高优先级，如果后续有优先级更高的，如2</em>3，则先计算2*3，算完了继续判断是否存在更高优先级，没有则返回到 1+ 处计算，倘若表达式很复杂，那么这个解析运算过程将十分复杂。</p>
+<p>Q: 为什么前后缀表达式计算机能解析？<br>
+A: 前后缀表达式保证计算机能先拿到操作数，再拿到运算符，计算机每次读取到相邻的操作数+运算符，即可直接计算，如上述，读到23*，即可计算得到6，再读到16+。。可以说，前后缀表达式已经对运算符进行了排序使得计算机顺序读取运算即可。</p>
+<p>所以关键就是将中缀改后缀（后缀用的广泛）。</p>
+<h2 id="中缀-转-后缀">中缀 转 后缀</h2>
 
                 </div>
             </article>

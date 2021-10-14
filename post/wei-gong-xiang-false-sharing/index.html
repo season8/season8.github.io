@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Spring注解 | 小栈</title>
+<title>伪共享（False Sharing） | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
 
@@ -89,17 +89,51 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    Spring注解
+                    伪共享（False Sharing）
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2021-07-19 ·
+                        · 2021-10-07 ·
                     </time>
                     
                 </div>
                 <div class="post-content">
-                    <p>善用注解，事半功倍。</p>
-<!-- more -->
+                    <pre><code class="language-Java">@sun.misc.Contended
+</code></pre>
+<p>这个注解，作为一个开发，可能没用过，但一定见过，jdk 的源码中有很多应用，比如：</p>
+<ul>
+<li>java.lang.Thread :<pre><code class="language-Java">@sun.misc.Contended(&quot;tlr&quot;)
+long threadLocalRandomSeed;
+
+/** Probe hash value; nonzero if threadLocalRandomSeed initialized */
+@sun.misc.Contended(&quot;tlr&quot;)
+int threadLocalRandomProbe;
+
+/** Secondary seed isolated from public ThreadLocalRandom sequence */
+@sun.misc.Contended(&quot;tlr&quot;)
+int threadLocalRandomSecondarySeed;
+</code></pre>
+</li>
+<li>java.util.concurrent.ConcurrentHashMap.CounterCell :<pre><code class="language-Java">@sun.misc.Contended static final class CounterCell {
+    volatile long value;
+    CounterCell(long x) { value = x; }
+}
+</code></pre>
+</li>
+<li>java.util.concurrent.Exchanger.Node :<pre><code class="language-Java">@sun.misc.Contended static final class Node {
+    int index;              // Arena index
+    int bound;              // Last recorded value of Exchanger.bound
+    int collides;           // Number of CAS failures at current bound
+    int hash;               // Pseudo-random for spins
+    Object item;            // This thread's current item
+    volatile Object match;  // Item provided by releasing thread
+    volatile Thread parked; // Set to this thread when parked, else null
+}
+</code></pre>
+</li>
+<li>java.util.concurrent.ForkJoinPool</li>
+<li>java.util.concurrent.ForkJoinPool.WorkQueue</li>
+</ul>
 
                 </div>
             </article>

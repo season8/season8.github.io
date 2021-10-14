@@ -1,0 +1,347 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>可编辑下拉框 | 小栈</title>
+
+<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://season8.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            小栈
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+                <div class="nav-item">
+                    
+                        <a href="/" class="menu gt-a-link">
+                            首页
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/archives" class="menu gt-a-link">
+                            归档
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/tags" class="menu gt-a-link">
+                            标签
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/post/about" class="menu gt-a-link">
+                            关于
+                        </a>
+                    
+                </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1634219138660" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    可编辑下拉框
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-28 ·
+                    </time>
+                    
+                        <a href="https://season8.github.io/tag/p5wh_xVAh/" class="post-tags">
+                            # 前端
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>jquery 大法好</p>
+<!-- more -->
+<p>应用后台开发的时候，写前端是难免的。<br>
+可编辑下拉框，很多框架有实现，但总会碰到框架支持不好（比如layui）或者没有引入框架的情况。</p>
+<p>网上找打原生实现的例子，鉴于前端写得少，转载记录之：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;自定义下拉选择框&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul,li {
+        list-style: none;
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    input[type=text] {
+        border: 1px solid #ccc;
+    }
+
+    input[type=text]:hover,
+    input[type=text]:focus {
+        border-color: #57bc80;
+        box-shadow: none;
+    }
+
+    body {
+        padding: 50px;
+        font-size: 12px;
+    }
+
+    .my-select-box {
+        position: relative;
+    }
+
+    .my-select-box .my-select-input {
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        padding-right: 20px !important;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .my-select-box .my-select-list {
+        position: absolute;
+        left: 0;
+        z-index: 101;
+        border: 1px solid #ccc;
+        border-top: none;
+        max-height: 120px;
+        overflow-y: auto;
+        display: none;
+        background: #fff;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .my-select-box .my-select-list li {
+        height: 22px;
+        line-height: 22px;
+        padding: 0 3px;
+        cursor: pointer;
+        margin-bottom: 1px
+    }
+
+    .my-select-box .my-select-list li.choosed {
+        background: #ccc;
+        color: #fff;
+    }
+
+    .my-select-box .my-select-list li:hover {
+        background: #ccc;
+        color: #fff;
+    }
+    &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div class=&quot;my-select-box&quot; style=&quot;width:300px;&quot;&gt;
+        &lt;input type=&quot;text&quot; class=&quot;my-select-input&quot; placeholder=&quot;可输入也可选择&quot; maxlength=&quot;20&quot; /&gt;
+        &lt;ul class=&quot;my-select-list&quot;&gt;
+            &lt;li data-value=&quot;1&quot;&gt;第一项&lt;/li&gt;
+            &lt;li data-value=&quot;2&quot;&gt;第二项&lt;/li&gt;
+            &lt;li data-value=&quot;3&quot;&gt;第三项&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div style=&quot;height: 30px&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;my-select-box&quot;&gt;
+        &lt;input type=&quot;text&quot; class=&quot;my-select-input&quot; placeholder=&quot;可输入也可选择&quot; maxlength=&quot;20&quot; /&gt;
+        &lt;ul class=&quot;my-select-list&quot;&gt;
+            &lt;li data-value=&quot;1&quot;&gt;第一项&lt;/li&gt;
+            &lt;li data-value=&quot;2&quot;&gt;第二项&lt;/li&gt;
+            &lt;li data-value=&quot;3&quot;&gt;第三项&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;jquery-3.2.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+    ;
+    (function($) {
+        $.fn.MySelect = function() {
+            this.each(function() {
+                var $box = $(this);
+                var $input = $box.find(&quot;input.my-select-input&quot;); //输入框
+                var $list = $input.next(); //ul装扮成下拉框
+
+                //计算input输入框的高度和宽度，方便定位ul和设置ul及包裹元素的宽度
+                var inputHeight = $input.outerHeight();
+                //var inputWidth=$input.innerWidth();
+                $list.css({ &quot;top&quot;: (inputHeight) });
+                //$box.width($input.outerWidth());
+
+                $input.focus(function() {
+                    //输入框获得焦点后，显示下拉选择ul
+                    var $nextUl = $(this).next();
+                    if ($nextUl.children().length &gt; 0) {
+                        $(this).next().show();
+                    }
+                }).bind('input propertychange', function() {
+                    //绑定监测输入框的输入值更改
+                    var $this = $(this);
+                    $this.attr(&quot;data-id&quot;, &quot;&quot;);
+                    var curText = $this.val();
+                    var $nextUl = $(this).next();
+                    if ($nextUl.children().length &gt; 0) {
+                        $nextUl.find(&quot;li&quot;).removeClass(&quot;choosed&quot;);
+                        $nextUl.find(&quot;li&quot;).each(function(i, item) {
+                            var txt = $(item).text();
+                            if (txt === curText) {
+                                var v = $(item).attr(&quot;data-value&quot;);
+                                $this.attr(&quot;data-id&quot;, v);
+                                $(item).addClass(&quot;choosed&quot;);
+                            }
+                        });
+                    }
+                });
+                //修改成如下事件绑定，为了给动态添加的li也可以产生点击效果
+                $list.off('click', 'li').on('click', 'li', function(e) {
+                    var $this = $(this);
+                    var value = $this.attr(&quot;data-value&quot;) || '';
+                    $input.val($this.text()).attr(&quot;data-id&quot;, value);
+                    $this.addClass(&quot;choosed&quot;).siblings().removeClass(&quot;choosed&quot;);
+                    $this.parent().hide();
+                });
+            });
+
+            //点击.my-select-box范围外时隐藏ul下拉框
+            $(document).click(function(e) {
+                var target = e.target;
+                var $target = $(target);
+                var $parent = $target.closest('.my-select-box');
+
+                if ($parent.length &lt; 1) {
+                    //说明不是.my-select-box范围内点击，将ul隐藏
+                    $(&quot;.my-select-list&quot;).hide();
+
+                } else if ($parent.length == 1) {
+                    //如果存在多个my-select-box的情况，将其余的非这项以外的都隐藏
+                    var $ul = $parent.find(&quot;.my-select-list&quot;);
+                    var flag = $ul.is(&quot;:hidden&quot;);
+                    $(&quot;.my-select-list&quot;).hide();
+                    if (!flag) $ul.show();
+                }
+            });
+            return this;
+        }
+    })(jQuery);
+
+    $(&quot;.my-select-box&quot;).MySelect();
+    &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>转自 <a href="https://www.jianshu.com/p/97252c501e91">原文</a></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://season8.github.io/post/qian-xi-stringintern/" class="post-title gt-a-link">
+                    浅析 String
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">与君酌</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/season8" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://season8.github.io
+" target="_blank">season8</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://season8.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Spring注解 | 小栈</title>
+<title>浅析 mysql 索引 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
 
@@ -89,17 +89,44 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    Spring注解
+                    浅析 mysql 索引
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2021-07-19 ·
+                        · 2021-10-06 ·
                     </time>
                     
                 </div>
                 <div class="post-content">
-                    <p>善用注解，事半功倍。</p>
-<!-- more -->
+                    <ul>
+<li>hash、聚簇、非聚簇</li>
+<li>B-Tree、 B+Tree、HashMap、Skip-List</li>
+<li>explain</li>
+<li>优化</li>
+</ul>
+<blockquote>
+<p>聚簇索引：将数据存储与索引放到了一块，找到索引也就找到了数据<br>
+非聚簇索引：将数据存储于索引分开结构，索引结构的叶子节点指向了数据的对应行，myisam通过key_buffer把索引先缓存到内存中，当需要访问数据时（通过索引访问数据），在内存中直接搜索索引，然后通过索引找到磁盘相应数据，这也就是为什么索引不在key buffer命中时，速度慢的原因</p>
+</blockquote>
+<p>https://cloud.tencent.com/developer/article/1541265</p>
+<blockquote>
+<p>聚簇索引默认是主键，如果表中没有定义主键，InnoDB 会选择一个唯一的非空索引代替。如果没有这样的索引，InnoDB 会隐式定义一个主键来作为聚簇索引。InnoDB 只聚集在同一个页面中的记录。包含相邻键值的页面可能相距甚远。如果你已经设置了主键为聚簇索引，必须先删除主键，然后添加我们想要的聚簇索引，最后恢复设置主键即可</p>
+</blockquote>
+<blockquote>
+<p>1.为什么mysql使用b+树而不是红黑树或者hashmap？<br>
+1.1、不使用红黑树是因为：<br>
+1）在增删改查的过程中，时间复杂度为log2n，而b+是logmN，体现在内存和磁盘的IO上，代价比较大。<br>
+2）特别是插入的时候，红黑树需要进行节点颜色调整，对于频繁的插入而言，这是一个耗时的过程，而b+树仅仅是页分裂问题。另外从并发交付来说，要么线程不安全，要么加锁虽然线程安全，但是牺牲了效率。<br>
+3）区间查找而言，b+树的叶子节点带有双向链表，因此比较方便。对于红黑树而言，虽然可以实现，比如通过中序遍历的方式，但是实现起来比较复杂。<br>
+1.2、不使用hashmap是因为<br>
+1）假设瓶颈不在hash数组上（hashmap由数组加链表构成），一方面，对于庞大数据量的链表来说，查找的时间复杂度为O（n），<br>
+2）另一方面从磁盘IO性能考虑，链表足够长，频繁的io会导致极差的性能。<br>
+3）对于区间查找，可行性为0。<br>
+1.3、不使用跳表是因为<br>
+1）虽然在区间查找上两者不相上下，如果纯粹基于内存工作，那就是redis。两者的主要区别，那就是一个是关系型，另一个是非关系型，redis是基于某个key进行排序构造的，如果像mysql哪样建立二级索引，那么每一个都是“聚簇索引”，得不偿失，维护也麻烦（就是说跳表无法解决索引问题）。<br>
+2）还是数据关系型的问题，虽然说跳表这个结构也可以以Json格式来存储数据库的行数据，但是类似主外键关系、模糊查找等功能，无法提供或者提供起来较为繁琐。<br>
+3）如果考虑到足够大的数据，大到需要使用硬盘的话，内存和磁盘进行io的内容会是什么？是跳表的每一层数据，前几层可能还好，越往下，可能不是一次页交换可以容纳下的，那么跳表在查找上的优势尽失，反观mysql，每次交换出来的非叶子节点都是索引，可查找范围大，io次数少，性能高。</p>
+</blockquote>
 
                 </div>
             </article>

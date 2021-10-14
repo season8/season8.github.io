@@ -1,0 +1,511 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>浅析 String | 小栈</title>
+
+<link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://season8.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            小栈
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+                <div class="nav-item">
+                    
+                        <a href="/" class="menu gt-a-link">
+                            首页
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/archives" class="menu gt-a-link">
+                            归档
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/tags" class="menu gt-a-link">
+                            标签
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/post/about" class="menu gt-a-link">
+                            关于
+                        </a>
+                    
+                </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1634219138660" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    浅析 String
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-22 ·
+                    </time>
+                    
+                        <a href="https://season8.github.io/tag/c0O9rlQeYA/" class="post-tags">
+                            # 源码
+                        </a>
+                    
+                        <a href="https://season8.github.io/tag/Kt7uCS1P4/" class="post-tags">
+                            # 八股
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>妙啊😏</p>
+<!-- more -->
+<h2 id="认识-string从-0-开始">认识 String，从 0 开始</h2>
+<p>无论是 初学 java 还是 java 老司机， 一定碰到过这个问题： String 是 基础类型 还是 对象类型？ 答案毫无悬念， 但问题本身是值得探究的：看似指鹿为马，实事出有因，String 作为一个对象类型，其使用方式 和 性质 还真就有点 基础类型的意思。</p>
+<pre><code class="language-java">public final class String
+    implements java.io.Serializable, Comparable&lt;String&gt;, CharSequence {
+    /** The value is used for character storage. */
+    private final char value[];
+
+    /** Cache the hash code for the string */
+    private int hash; // Default to 0
+</code></pre>
+<p>从String 的源码可以看到：</p>
+<ol>
+<li>String 是基于 char数组实现的</li>
+<li>String 以及 成员变量 value、hash 都是 final 修饰的。</li>
+</ol>
+<p>为什么要使用 final 去修饰呢？先看看 final 关键字的作用：</p>
+<ol>
+<li>修饰的类，无法被继承。</li>
+<li>修饰的方法，无法被重写。</li>
+<li>修饰的变量，必须初始化，且初始化之后，值不能更改。</li>
+<li><strong>隐藏属性</strong>：如果 final 修饰的 是一个 普通对象类型， 那么只能限定其引用不能修改，其非 final 修饰的成员变量 的值 ，是可以修改的，就好比我改了名字，但在改名前后，我任然是代表我自己，指代没有发生变化。</li>
+</ol>
+<p>那么，综合来看,可以得出以下结论:</p>
+<ol>
+<li>Stirng 对象无法被继承。</li>
+<li>成员 value 和 hash 必须被初始化。</li>
+<li>成员 value 的引用不能更改、成员hash 的值不能被修改。</li>
+</ol>
+<p>注意第三条，value 只是引用不能修改，，因为它是 final char[] 对象，在不修改引用的前提下，修改对象内部值是不违反 final 关键字的约束的（见 final 隐藏属性）。</p>
+<p>但是，在 String 中，成员 value 除了 有 final 修饰以外，还有一个 private 修饰符，它表示 value 只能被 String 对象自身 以及 <s>String 的 子类</s>（上面总结第一点：String 无法被继承）访问，而 String 类中 涉及 对 value 写入 的方法，只有 构造器了，所以 String 的成员 value 既不能被修改引用，又不能修改 value 对象内的值。</p>
+<p>再次归纳一下：<br>
+String 对象自创建后，它的对象引用无法被修改、内部成员 的引用 和值 也都无法被修改，它从初始化后，就没有办法被改变了，我们就称这个特性为”<strong>不可变性</strong>“  好了。</p>
+<p>但是，这也太奇怪了，它明明是一个对象不是吗？为什么要给他加上这种 ”不可变性“的约束呢？<br>
+要我说，这样的对象，它除了定义本身是对象、有构造器 和 诸多成员方法外，更像是一个基础数据类型呢！事实上，我们在使用 String 类型变量的 便捷、频率上，它几乎是和基础类型没什么区别，甚至我在刚刚接触编程的时候，都有一种 String 是基础数据类型的错觉！</p>
+<p>要解释这个疑问，不妨逆向思维一下：假如 String 没有 ”不可变性“，现有的程序会出现哪些问题？</p>
+<ol>
+<li>静态 String 变量将失去意义，比如如下常量，可以通过实现 String 的子类来修改其内部属性。</li>
+<li>String 对象，将变得不安全，和第一种情况相似，任何一个线程都有可能会修改 String 对象的内容。</li>
+<li>String 的 hash 将可改变，这会导致 HashMap 失去作用（每次hash 改变都要去 计算hash，改变所属桶），因为 HashMap 的键值设计就是基于 String 的 hashCode。</li>
+<li>我们常使用的 字符串<strong>常量</strong>池， 也将失去作用，当 String 可变时， 就已经不能满足常量这一称呼了。</li>
+</ol>
+<p>所以，String 类型“<strong>不可变性</strong>”的作用是如此的重要， 正是有了这一个特性，我们才能：</p>
+<ul>
+<li>像使用常量一样随意去使用它，不用考虑它的安全问题</li>
+<li>能像常量一样把常用的 String 对象 存储到 常量池中， 节省内存</li>
+<li>利用 hashCode 快速在 HashMap 中 存储、查找元素</li>
+</ul>
+<h2 id="string-创建机制">String 创建机制</h2>
+<p>如果把 String 比作子弹，<strong>不可变性</strong>  就好比附魔，jdk 提供的 String 创建机制 就是一把能打出附魔子弹的手枪。</p>
+<p>下面一段代码使用了常见的几种 方式来 创建 String 对象：</p>
+<pre><code class="language-java">public class StringDemo {
+	public void init() {
+		String s1 = &quot;foo bar&quot;; // 1
+		String s2 = new String(&quot;foo bar&quot;);// 2
+		String s3 = &quot;foo &quot; + &quot;bar&quot;;// 3
+		String s4 = &quot;foo &quot; + new String(&quot;bar&quot;);// 4
+		String s5 = String.valueOf(&quot;foo bar&quot;);// 5
+	}
+}
+</code></pre>
+<p>直接双引号创建、支持 + 操作符，这些便捷的语法，或许和编译器有关，但，他们之间有没有区别呢？大致的原理又是什么？是时候让字节码发言了！</p>
+<pre><code class="language-java">// class version 52.0 (52)
+// access flags 0x21
+public class StringDemo {
+
+  // compiled from: StringDemo.java
+
+  // access flags 0x1
+  public &lt;init&gt;()V
+   L0
+    LINENUMBER 11 L0
+    ALOAD 0
+    INVOKESPECIAL java/lang/Object.&lt;init&gt; ()V
+    RETURN
+   L1
+    LOCALVARIABLE this Lcj/StringDemo; L0 L1 0
+    MAXSTACK = 1
+    MAXLOCALS = 1
+
+  // access flags 0x1
+  public init()V
+   L0
+    LINENUMBER 14 L0
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    ASTORE 1 // 栈顶出栈，赋值给 变量表 index=1 的变量，s1
+   L1
+    LINENUMBER 15 L1
+    NEW java/lang/String // 创建 String 对象，入栈
+    DUP // 赋值栈顶对象并入栈
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    INVOKESPECIAL java/lang/String.&lt;init&gt; (Ljava/lang/String;)V // 调用 String 构造器
+    ASTORE 2 // 栈顶出栈，赋值给 变量表 index=2 的变量，s2
+   L2
+    LINENUMBER 16 L2
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    ASTORE 3 // 栈顶出栈，赋值给 变量表 index=3 的变量，s3
+   L3
+    LINENUMBER 17 L3
+    NEW java/lang/StringBuilder // 创建 StringBuilder 对象，入栈
+    DUP
+    INVOKESPECIAL java/lang/StringBuilder.&lt;init&gt; ()V // 调用 StringBuilder 构造器
+    LDC &quot;foo &quot; // 常量池 对象 的引用，入栈
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; // 调用 StringBuilder#append ，返回值入栈
+    NEW java/lang/String // 创建 String 对象，入栈
+    DUP
+    LDC &quot;bar&quot; // 常量池 对象 的引用，入栈
+    INVOKESPECIAL java/lang/String.&lt;init&gt; (Ljava/lang/String;)V // 调用 String 构造器，利用 常量池中“bar”的引用创建新的对象
+    INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder; // 调用 StringBuilder#append ，返回值入栈
+    INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+    ASTORE 4 // 栈顶出栈，赋值给 变量表 index=4 的变量，s4
+   L4
+    LINENUMBER 18 L4
+    LDC &quot;foo bar&quot; // 常量池 对象 的引用，入栈
+    INVOKESTATIC java/lang/String.valueOf (Ljava/lang/Object;)Ljava/lang/String;
+    ASTORE 5 // 栈顶出栈，赋值给 变量表 index=5 的变量，s5
+   L5
+    LINENUMBER 19 L5
+    RETURN
+   L6
+    LOCALVARIABLE this Lcj/StringDemo; L0 L6 0
+    LOCALVARIABLE s1 Ljava/lang/String; L1 L6 1
+    LOCALVARIABLE s2 Ljava/lang/String; L2 L6 2
+    LOCALVARIABLE s3 Ljava/lang/String; L3 L6 3
+    LOCALVARIABLE s4 Ljava/lang/String; L4 L6 4
+    LOCALVARIABLE s5 Ljava/lang/String; L5 L6 5
+    MAXSTACK = 4
+    MAXLOCALS = 6
+}
+</code></pre>
+<p>先解释几个指令：</p>
+<ul>
+<li><strong>NEW</strong>：创建对象，参数为对象类型</li>
+<li><strong>DUP</strong>: 复制栈顶的一个或两个数值并将其重新压入栈顶</li>
+<li><strong>LDC</strong>: 接收一个 8 位的参数，指向常量池中的索引</li>
+<li><strong>ASTORE n</strong>: 从操作数中弹出一个引用数据类型，并把它赋值给局部变量表中索引为 n 的变量</li>
+<li><strong>INVOKESPECIAL</strong>: 调用一些需要特殊处理的方法，包括构造方法、私有方法和父类方法</li>
+<li><strong>INVOKEVIRTUAL</strong>: 调用对象的成员方法，根据对象的实际类型进行分派，支持多态</li>
+<li><strong>INVOKESTATIC</strong>: 调用静态方法</li>
+</ul>
+<p>逐个对象对照分析：</p>
+<ul>
+<li>s1 直接使用双引号创建， 其实际是常量池对象的引用，也就是说，直接双引号创建的字符串都是直接创建在了常量池中。</li>
+<li>s2 通过构造器创建，它是 基于 常量池对象引用 ，创建（new）的 新的对象，即：先在常量池中创建了对象，再基于该对象引用，在堆中创建新的对象，不考虑s1的话，这里一共创建了2个对象！</li>
+<li>s3 看上去和 s1 指令相同，说明编译器将其优化了</li>
+<li>s4 通过 + 拼接 两段 字符串，它的本质居然是 创建了一个空的 StringBuilder，经过两次apend后，调用toString 返回的对象。</li>
+</ul>
+<p>至此 String 三种创建机制的原理和区别，已经清晰明了：</p>
+<ol>
+<li>“”创建： 创建了1个对象， 对象在常量池中</li>
+<li>new String(&quot;&quot;)：创建了 2 个对象， 第一个对象在常量池中，后一个对象value 是 前一个对象value的引用</li>
+<li>“+”拼接：如果拼接的是两段 双引号字符串，那么将直接被编译器优化一个双引号字符串（方式1），否则，将使用 StringBuilder 进行 拼接，其中，每一段构造器创建子串 都将执行 方式2 。</li>
+</ol>
+<h2 id="字符串常量池">字符串常量池</h2>
+<p>上一步的字节码中，有一个指令出现得很频繁：LDC（创建常量池对象，返回其引用）<br>
+这里常量池准确来说是指代 字符串常量池，那么，字符串常量池是什么？</p>
+<p>探究常量池，可以从 String 的 intern 方法中找到蛛丝马迹：</p>
+<pre><code class="language-java">    /**
+     * Returns a canonical representation for the string object.
+     * &lt;p&gt;
+     * A pool of strings, initially empty, is maintained privately by the
+     * class {@code String}.
+     * &lt;p&gt;
+     * When the intern method is invoked, if the pool already contains a
+     * string equal to this {@code String} object as determined by
+     * the {@link #equals(Object)} method, then the string from the pool is
+     * returned. Otherwise, this {@code String} object is added to the
+     * pool and a reference to this {@code String} object is returned.
+     * &lt;p&gt;
+     * It follows that for any two strings {@code s} and {@code t},
+     * {@code s.intern() == t.intern()} is {@code true}
+     * if and only if {@code s.equals(t)} is {@code true}.
+     * &lt;p&gt;
+     * All literal strings and string-valued constant expressions are
+     * interned. String literals are defined in section 3.10.5 of the
+     * &lt;cite&gt;The Java&amp;trade; Language Specification&lt;/cite&gt;.
+     *
+     * @return  a string that has the same contents as this string, but is
+     *          guaranteed to be from a pool of unique strings.
+     */
+    public native String intern();
+</code></pre>
+<p>从注释部分，可以看出关于字符串常量池的描述：一个[String 类私有地维护的] [初始容量为空的] 字符串池。</p>
+<p>intern 方法的作用就是：如果池中 已经有了一个 （与当前对象内容） 相同value 的对象，返回池中对象；否则， 将当前对象添加到池中，并返回 当前对象的引用。</p>
+<p>注释中还提到：所有明面上的字符串和 字符串值常量表达式，都是已经执行了 intern 方法的。所谓 明面上的字符串 就是 上面提到的 双引号创建的字符串，如：String s1 = &quot;abc&quot;，字符串常量表达式则是形如 「String s2 =“a”+ &quot;b&quot;」  这种 表达式，这也应证了前面分析 String 创建机制 的字节码内容。</p>
+<p>intern 是一个 native 方法，它的实现部分是在 jdk 的 C++ 类中，在线查看 openjdk 源码（我选择的是 <a href="http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d">open jdk 8</a>）</p>
+<p><a href="http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/src/share/native/java/lang/String.c">jdk: String.c</a> ：</p>
+<pre><code class="language-C">#include &quot;jvm.h&quot;
+#include &quot;java_lang_String.h&quot;
+
+JNIEXPORT jobject JNICALL
+Java_java_lang_String_intern(JNIEnv *env, jobject this)
+{
+    return JVM_InternString(env, this);
+}
+</code></pre>
+<p>\jdk-687fd7c7986d\src\share\javavm\export\jvm.h：<br>
+<a href="http://hg.openjdk.java.net/jdk8/jdk8/hotspot/file/87ee5ee27509/src/share/vm/prims/jvm.h">hostspot: jvm.h</a>：</p>
+<pre><code class="language-C">...
+/*
+ * java.lang.String
+ */
+JNIEXPORT jstring JNICALL
+JVM_InternString(JNIEnv *env, jstring str);
+</code></pre>
+<p><a href="http://hg.openjdk.java.net/jdk8/jdk8/hotspot/file/87ee5ee27509/src/share/vm/prims/jvm.cpp">hostspot: jvm.cpp</a>：</p>
+<pre><code class="language-C">// String support ///////////////////////////////////////////////////////////////////////////
+
+JVM_ENTRY(jstring, JVM_InternString(JNIEnv *env, jstring str))
+  JVMWrapper(&quot;JVM_InternString&quot;);
+  JvmtiVMObjectAllocEventCollector oam;
+  if (str == NULL) return NULL;
+  oop string = JNIHandles::resolve_non_null(str);
+  oop result = StringTable::intern(string, CHECK_NULL);
+  return (jstring) JNIHandles::make_local(env, result);
+JVM_END
+</code></pre>
+<p>可以看到， java.lang.String#intern 是 通过 JNI（Java Native Interface） 调用 C++ 代码中的 StringTable 的 intern 方法实现的。 StringTable 是类似与 java 中 HashMap的结构，区别是，它的长度是固定的: 1009，另外，我们可以通过设置 jvm 启动参数修改默认大小：</p>
+<pre><code>  -XX:StringTableSize=9999
+</code></pre>
+<p>jdk1.7 以前的版本中，字符串常量池 维护在永久代中，但是在 1.7 版本开始，jdk 移除了永久代，字符串常量池移到了 元数据区，该区又是维护在了堆内存中，这样可以将 永久代 OOM 的风险转到 堆中。字符串常量池的移动对 版本的兼容是有一定影响的，典型的就是：</p>
+<p>创建了几个 String 对象 的问题，我们实际应用中可能不会去触发这个问题，但是这个问题作为一个基础知识，能绕晕一大片老司机😵</p>
+<p>是的，我必然是要分析这个经典八股题的，这篇八股能讲清楚了，那是真正对 『字符串常量池』、『永久代和 元数据区的关系』 了解的透彻了。</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    String s = new String(&quot;1&quot;);
+    s.intern();
+    String s2 = &quot;1&quot;;
+    System.out.println(s == s2); 
+
+    String s3 = new String(&quot;1&quot;) + new String(&quot;1&quot;);
+    s3.intern();
+    String s4 = &quot;11&quot;;
+    System.out.println(s3 == s4);
+}
+</code></pre>
+<p>输出结果：<br>
+jdk1.6: <em>false</em> <em>false</em><br>
+jdk1.7:  <em>false</em> <em>true</em></p>
+<p>为什么是这个结果，可以结合以下内存变量内存分布图来分析：</p>
+<pre><code>     ┌────────┐      ┌───────Heap───────────┐  ┌────PermGen───────────┐
+     │        │      │                      │  │                      │
+     │        │      │     ┌─────────┐      │  │ ┌────String Pool───┐ │
+     │   s ───┼──────┼────►│  String │      │  │ │                  │ │
+     │        │      │     │   Obj   │--------------►┌──────────┐   │ │
+     │        │      │     └─────────┘      │  │ │   │          │   │ │
+     │        │      │                      │  │ │   │   &quot;1&quot;    │   │ │
+     │  s2 ───┼──────┼──────────────────────┼──┼─┼──►│          │   │ │
+     │        │      │                      │  │ │   └──────────┘   │ │
+     │        │      │     ┌─────────┐      │  │ │                  │ │
+     │        │      │     │ String  │      │  │ │   ┌──────────┐   │ │
+     │  s3 ───┼──────┼────►│   Obj   │      │  │ │   │          │   │ │
+     │        │      │     └─────────┘      │  │ │   │   &quot;11&quot;   │   │ │
+     │        │      │                      │  │ │   │          │   │ │
+     │  s4 ───┼──────┼──────────────────────┼──┼─┼──►└──────────┘   │ │
+     │        │      │                      │  │ │                  │ │
+     │        │      │                      │  │ └──────────────────┘ │    ─────►：对象引用
+     │        │      │                      │  │                      │    -----►：对象值引用
+     └────────┘      └──────────────────────┘  └──────────────────────┘
+                             jdk 1.6
+</code></pre>
+<p>先来看 jdk1.6 ，结合前面的 String 实例化方式以及字节码知识逐条分析：</p>
+<ol>
+<li>String s = new String(&quot;1&quot;)<br>
+创建 s 对象的时候， 常量池中以及有常量 &quot;1&quot; 了， 然后基于该常量创建了新的对象 s，此时， s 对象 不等于常量池中常量，但其 「char[] value」是指向 常量池中 常量 的 value （见构造器）。</li>
+<li>s.intern()<br>
+由于常量池中已经有了对象，s.intern() 直接返回常量池中的对象，注意该表达式并没有使用变量来接收返回值，故不产生任何影响。</li>
+<li>String s2 = &quot;1&quot;<br>
+使用书面表达式创建字符串，所以 s2 是直接引用的 常量池对象。</li>
+</ol>
+<p>因此，s 指向堆中对象，s2 指向常量池对象，二者不相同，但它们指向的对象 的 值（value）相同。</p>
+<ol start="4">
+<li>
+<p>String s3 = new String(&quot;1&quot;) + new String(&quot;1&quot;);<br>
+根据 前面字节码分析，可知 s3 创建流程为：</p>
+<ol>
+<li>创建 StringBuilder 对象</li>
+<li>创建常量池对象 “1”</li>
+<li>用常量池对象的值（value）在堆中创建一个新的对象“1”</li>
+<li>StringBuilder 对象 append 新创建的对象</li>
+<li>重复第 3 步，第4 步</li>
+<li>s3 = StringBuilder#toString</li>
+</ol>
+<p>s3 创建完成后，常量池中创建了对象 “1”，但没有创建常量 “11”</p>
+</li>
+<li>
+<p>s3.intern();<br>
+由于常量池中没有 “11”，因此将 s3 放到常量池中，由于 s3 在堆中，常量池在 永久区，因此此时的 『将 s3 放入 常量池』实际是 『用 s3的值在常量池中创建一个对象，二者对象、对象值不存在任何引用关系』。这里 的 intern 放回的是 常量池中创建的新对象，其返回值没有变量接收，不产生任何影响。</p>
+</li>
+<li>
+<p>String s4 = &quot;11&quot;;<br>
+s4 使用书面表达式创建字符串，所以 s4 = 常量池中对象</p>
+<p>因此，s3 指向堆中对象， s4 指向 常量池中对象， 其对象 和 对象值 没有任何关系</p>
+</li>
+</ol>
+<pre><code>     ┌────────┐      ┌────────────────────Heap────────────────────────┐
+     │        │      │                                                │
+     │        │      │     ┌─────────┐           ┌─────tring Pool───┐ │
+     │   s ───┼──────┼────►│  String │           │                  │ │
+     │        │      │     │    Obj  │--------------►┌──────────┐   │ │
+     │        │      │     └─────────┘           │   │ String   │   │ │
+     │        │      │                           │   │    1     │   │ │
+     │  s2 ───┼──────┼───────────────────────────┼──►│          │   │ │
+     │        │      │                           │   └──────────┘   │ │
+     │        │      │     ┌─────────┐           │                  │ │
+     │        │      │     │ String  │           │   ┌──────────┐   │ │
+     │  s3 ───┼──────┼────►│   11    │◄──────────┼───┤  String  │   │ │
+     │        │      │     └─────────┘           │   │    Obj   │   │ │
+     │        │      │                           │   │          │   │ │
+     │  s4 ───┼──────┼───────────────────────────┼──►└──────────┘   │ │
+     │        │      │                           │                  │ │
+     │        │      │                           └──────────────────┘ │    ─────►：对象引用
+     │        │      │                                                │    -----►：对象值引用
+     └────────┘      └────────────────────────────────────────────────┘
+
+                            jdk1.7
+</code></pre>
+<p>再来看 jdk1.7</p>
+<ol>
+<li>String s = new String(&quot;1&quot;)</li>
+<li>s.intern()</li>
+<li>String s2 = &quot;1&quot;</li>
+</ol>
+<p>s 和 s2 创建 过程和结果 与 jdk 1.6 一样，唯一区别是常量池位置。</p>
+<ol start="4">
+<li>String s3 = new String(&quot;1&quot;) + new String(&quot;1&quot;);<br>
+s3 过程和结果 与 jdk 1.6 一样</li>
+<li>s3.intern();<br>
+由于常量池中没有 “11”，因此将 s3 放到常量池中，由于 s3 在堆中，常量池也在堆中，因此，intern 会直接将  s3 “放入”到常量池中，其结果就是 常量池对象 是 s3 对象（堆中对象）的引用</li>
+<li>String s4 = &quot;11&quot;;<br>
+s4 使用书面表达式创建字符串，所以 s4 = 常量池中对象 = s3</li>
+</ol>
+<h2 id="合理适用-字符串常量池intern">合理适用 字符串常量池/intern</h2>
+<p>字符串常量池的作用就一个：节省空间<br>
+通常来讲，空间和时间不可兼得，节省了空间，就会耗费更多时间，intern 操作 是有额外时间开销的。<br>
+如果常量池使用不当， 这个时间开销可能会被放大，甚至有 OOM的风险。</p>
+<p>举个栗子，假如一个应用 持续产生 不重复的字符串， 并每次获取字符串时都尝试使用 intern 将其存入常量池 或从 常量池返回已有对象，由于 字符串不重复，intern 实际 是持续往 StringTable put 数据的，前面我们提到过，StringTable 的结构和 HashMap 类似，我们可以类比 HashMap 来分析：</p>
+<p>首先，HashMap 是有 若干个 桶 组成， 每个桶又由一个链表或红黑树组成，当元素特别多的时候，Hash 碰撞比较频繁， 桶内 链表长度 或 树的深度会非常大，此时若是 查询，时间开销将很大。</p>
+<p>intern 在将数据 放入到 StringTable 前，是需要去查字符串值是否已经在 StringTable 中的，此时刚好就产生了大量的时间开销。</p>
+<p>那么正确的姿势是？<br>
+大量字符串对象且重复率高的应用，可以在字符串获取的时候使用 intern，这样虽然增加了些许时间开销，但能节省大量 新对象的空间开销。 值得注意的是，实际使用中也要根据 字符串对象的量 配置合适的 StringTableSize，太小，Hash碰撞 导致 查询耗时增加， 太大， 浪费内存。</p>
+<p>参考：<br>
+<a href="https://tech.meituan.com/2014/03/06/in-depth-understanding-string-intern.html">美团-深入解析 String#intern</a><br>
+<a href="http://hg.openjdk.java.net/">openjdk 源码</a></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://season8.github.io/post/pdf-yl/" class="post-title gt-a-link">
+                    pdf预览的几种方法
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">与君酌</div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/season8" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://season8.github.io
+" target="_blank">season8</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://season8.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

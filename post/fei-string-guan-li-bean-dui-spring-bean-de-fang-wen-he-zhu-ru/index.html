@@ -4,7 +4,7 @@
 <meta name="description" content=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-<title>Spring注解 | 小栈</title>
+<title>非 String 管理 bean 对 Spring Bean 的 访问和注入 | 小栈</title>
 
 <link rel="shortcut icon" href="https://season8.github.io/favicon.ico?v=1634219138660">
 
@@ -89,17 +89,20 @@
         <div class="post-detail gt-bg-theme-color-second">
             <article class="gt-post-content">
                 <h2 class="post-title">
-                    Spring注解
+                    非 String 管理 bean 对 Spring Bean 的 访问和注入
                 </h2>
                 <div class="post-info">
                     <time class="post-time gt-c-content-color-first">
-                        · 2021-07-19 ·
+                        · 2021-09-27 ·
                     </time>
                     
                 </div>
                 <div class="post-content">
-                    <p>善用注解，事半功倍。</p>
+                    <p>这个标题有点长</p>
 <!-- more -->
+<p>想象一种情况，你的程序在运行时，会动态的通过反射去生成一些类，比如根据大量的配置动态生成配置类，这些类的创建、初始化都和Spring 没有任何关系，但是，你又偏偏要在这些动态生成的类中，访问 Spring 管理的某些类，此时应该怎么做呢？</p>
+<p>最直观的思路是：从最外层可管理的类开始，注入要使用的 Bean，再将 该 bean 层层赋值 给 下一层的 bean， 最终 set 给 目标类。</p>
+<p>但这个方案可行性就很让人难受了，首先， 每一层 赋值，意味着：每一层的类 都要增加 目标Bean 属性，如果 层次 较多、代码封装在了jar中，还不一定能施展开，</p>
 
                 </div>
             </article>
